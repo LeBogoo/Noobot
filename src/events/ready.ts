@@ -12,15 +12,16 @@ export default async function (client: Client) {
 
     for (let i = 0; i < commands.length; i++) {
         var command = (await import(`../commands/${commands[i]}`)).default;
+        var commandName = commands[i].split('.')[0];
+        command.builder.setName(commandName);
         commands[i] = command.builder.toJSON();
     }
 
     const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
 
-
     client.guilds.cache.forEach(guild => {
         rest.put(
-            Routes.applicationGuildCommands(guild.id, client.user?.id),
+            Routes.applicationGuildCommands(client.application?.id, guild.id),
             { body: commands },
         );
     })

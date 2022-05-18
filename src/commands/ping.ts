@@ -4,10 +4,9 @@ import { CommandInteraction } from "discord.js";
 
 export default {
     builder: new SlashCommandBuilder()
-        .setName("ping")
         .setDescription("Replies with Pong!"),
 
     run: async function (interaction: CommandInteraction) {
-        interaction.reply("Apongus!");
+        interaction.reply("Pingeling, Pongelong, Dingeling, Dongelong!");
     }
 }
