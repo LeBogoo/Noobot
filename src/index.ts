@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { Client, Intents, Interaction } from 'discord.js';
+import { Client, Intents } from 'discord.js';
 import { readdirSync } from 'fs';
 dotenv.config();
 

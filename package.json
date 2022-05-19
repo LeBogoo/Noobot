@@ -2,7 +2,6 @@
   "name": "newbot",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "build": "tsc",
     "start": "node -r dotenv/config ./prod/index.js"
