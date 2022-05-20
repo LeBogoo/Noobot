@@ -7,6 +7,6 @@ export default {
         .setDescription("Replies with Pong!"),
 
     run: async function (interaction: CommandInteraction) {
-        interaction.reply("Pingeling, Pongelong, Dingeling, Dongelong!");
+        return "Pingeling, Pongelong, Dingeling, Dongelong!";
     }
 }

@@ -1,27 +1,42 @@
 import { SlashCommandBuilder, SlashCommandStringOption } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed } from "discord.js";
 import { readdirSync } from "fs";
-import { BotCommand } from "../types";
+import { BotCommand, JsonCommand } from "../types";
 
 export default {
     builder: new SlashCommandBuilder()
         .setDescription("Adds a custom command.")
-        .setName("add")
-        .addStringOption(Omit<SlashCommandStringOption, "">)
-        ,
-
+        .addStringOption((option) => option
+            .setName("name")
+            .setDescription("The name of the command.")
+            .setRequired(true)
+        )
+        .addStringOption((option) => option
+            .setName("description")
+            .setDescription("The description of the command.")
+            .setRequired(true)
+        )
+        .addStringOption((option) => option
+            .setName("response")
+            .setDescription("The response of the command.")
+            .setRequired(true)
+        ),
     run: async function (interaction: CommandInteraction) {
         const customCommands = readdirSync("./src/commands");
-        
-        // const embed = new MessageEmbed();
 
-        // for (let command of commands) {
-        //     const commandName = command.split(".")[0];
-        //     const commandModule = (await import(`../commands/${command}`)).default;
+        const name = interaction.options.getString("name") || "Default Name";
+        const description = interaction.options.getString("description") || "Default Description";
+        const response = interaction.options.getString("response") || "Default Response";
+        if (customCommands.includes(`${name}.ts`)) return `Command \`${name}\` already exists!`;
 
-        //     embed.addField(commandName, commandModule.builder.description);
-        // }
+        const command: JsonCommand = {
+            commandJSON: new SlashCommandBuilder()
+                .setName(name)
+                .setDescription(description)
+                .toJSON(),
+            response: response,
+        };
 
-        // interaction.reply({ content: "Here is what i've found!", embeds: [embed] });
+        return `\`\`\`json\n${JSON.stringify(command, null, 2)}\n\`\`\``;
     }
-} as BotCommand;
+} as unknown as BotCommand;
