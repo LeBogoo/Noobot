@@ -10,7 +10,7 @@ export default async function (interaction: CommandInteraction) {
     }
 
     const command = (await import(`../commands/${interaction.commandName}.ts`)).default;
-    interaction.deferReply();
+    // interaction.deferReply();
     const result = await command.run(interaction);
     if (result) interaction.reply(result);
 }

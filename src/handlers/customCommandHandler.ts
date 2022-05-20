@@ -8,7 +8,4 @@ export default async function (interaction: CommandInteraction) {
         interaction.reply(`Command \`${interaction.commandName}\` not found!`);
         return;
     }
-
-    const command = (await import(`../commands/${interaction.commandName}.ts`)).default;
-    command.run(interaction);
 }

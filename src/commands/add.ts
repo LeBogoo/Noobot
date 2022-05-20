@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, SlashCommandStringOption } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed } from "discord.js";
-import { readdirSync } from "fs";
+import { readdirSync, writeFileSync } from "fs";
 import { BotCommand, JsonCommand } from "../types";
 
 export default {
@@ -24,9 +24,15 @@ export default {
     run: async function (interaction: CommandInteraction) {
         const customCommands = readdirSync("./src/commands");
 
-        const name = interaction.options.getString("name") || "Default Name";
+        console.log(customCommands);
+
+        const name = interaction.options.getString("name") || "defaultname";
         const description = interaction.options.getString("description") || "Default Description";
         const response = interaction.options.getString("response") || "Default Response";
+
+        console.log(name, description, response);
+
+
         if (customCommands.includes(`${name}.ts`)) return `Command \`${name}\` already exists!`;
 
         const command: JsonCommand = {
@@ -37,6 +43,7 @@ export default {
             response: response,
         };
 
-        return `\`\`\`json\n${JSON.stringify(command, null, 2)}\n\`\`\``;
+        writeFileSync(`./src/customCommands/${name}.json`, JSON.stringify(command));
+        return `Command \`${name}\` added!`;
     }
 } as unknown as BotCommand;
