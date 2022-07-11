@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { RESTPostAPIApplicationCommandsJSONBody } from 'discord-api-types/v9';
+import { CommandInteraction } from 'discord.js';
 
 export type JsonCommand = {
     commandJSON: RESTPostAPIApplicationCommandsJSONBody;
@@ -8,5 +9,5 @@ export type JsonCommand = {
 
 export type BotCommand = {
     builder: SlashCommandBuilder;
-    run: Function;
+    run: (interaction: CommandInteraction) => string;
 }
