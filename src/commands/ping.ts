@@ -6,7 +6,7 @@ export default {
     builder: new SlashCommandBuilder()
         .setDescription("Replies with Pong!"),
 
-    run: async function (interaction: CommandInteraction) {
+    run: function (_interaction: CommandInteraction) {
         return "Pingeling, Pongelong, Dingeling, Dongelong!";
     }
 }

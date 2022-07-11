@@ -14,26 +14,27 @@ export default async function (client: Client) {
     console.log(`${client.user?.username} is ready!`);
     client.user?.setActivity(`${client.guilds.cache.size} servers!`, { type: 'WATCHING' });
 
-    var commands: RESTPostAPIApplicationCommandsJSONBody[] = [];
+    const commands: RESTPostAPIApplicationCommandsJSONBody[] = [];
 
-    var defaultCommands = readdirSync('./src/commands');
+    const defaultCommands = readdirSync('./src/commands');
 
     for (let i = 0; i < defaultCommands.length; i++) {
-        var command = (await import(`../commands/${defaultCommands[i]}`)).default;
-        var commandName = defaultCommands[i].split('.')[0];
+        const command = (await import(`../commands/${defaultCommands[i]}`)).default;
+        const commandName = defaultCommands[i].split('.')[0];
 
-        var builder = command.builder as SlashCommandBuilder;
+        const builder = command.builder as SlashCommandBuilder;
         builder.setName(commandName);
 
         commands.push(builder.toJSON());
     }
 
-    var customCommands = readdirSync('./src/customCommands');
-
+    /**
+     * Register custom commands
+     * @todo Make it guild independent!
+     */
+    const customCommands = readdirSync('./data/customCommands');
     for (let i = 0; i < customCommands.length; i++) {
-        const customCommand = readCommandFile(`./src/customCommands//${customCommands[i]}`)
-        var commandName = customCommand.commandJSON.name;
-
+        const customCommand = readCommandFile(`./data/customCommands//${customCommands[i]}`)
         commands.push(customCommand.commandJSON);
     }
 

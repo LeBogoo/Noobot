@@ -12,9 +12,7 @@ const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
 (async () => {
     try {
         console.log('Started refreshing application (/) commands.');
-
-        await rest.put(
-            Routes.applicationGuildCommands("817807367773093928", "916743600489005066"),
+        await rest.put(Routes.applicationGuildCommands("817807367773093928", "916743600489005066"),
             { body: commands },
         );
 

@@ -1,5 +1,5 @@
-import { SlashCommandBuilder, SlashCommandStringOption } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { SlashCommandBuilder } from "@discordjs/builders";
+import { CommandInteraction } from "discord.js";
 import { readdirSync, writeFileSync } from "fs";
 import { BotCommand, JsonCommand } from "../types";
 
@@ -21,7 +21,7 @@ export default {
             .setDescription("The response of the command.")
             .setRequired(true)
         ),
-    run: async function (interaction: CommandInteraction) {
+    run: function (interaction: CommandInteraction) {
         const customCommands = readdirSync("./src/commands");
 
         console.log(customCommands);

@@ -10,7 +10,7 @@ export default {
         const commands = readdirSync("./src/commands");
         const embed = new MessageEmbed();
 
-        for (let command of commands) {
+        for (const command of commands) {
             const commandName = command.split(".")[0];
             const commandModule = (await import(`../commands/${command}`)).default;
 
