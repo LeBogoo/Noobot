@@ -9,7 +9,7 @@ export default async function (interaction: CommandInteraction) {
      * @todo Make it global commands!
      */
     if (isCommand(interaction.commandName)) {
-        const command = (await import(`.${PATHS.COMMANDS}/${interaction.commandName}.ts`))
+        const command = (await import(`../commands/${interaction.commandName}.ts`))
             .default;
         const result = await command.run(interaction);
         if (result) interaction.reply(result);

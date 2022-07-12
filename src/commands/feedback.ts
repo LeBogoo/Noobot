@@ -19,7 +19,7 @@ export default {
 
     run: function (interaction: CommandInteraction) {
         const title = interaction.options.getString("title") || "error while getting title";
-        const description = interaction.options.getString("title") || "error while getting description";
+        const description = interaction.options.getString("description") || "error while getting description";
         const author = interaction.user.username + "#" + interaction.user.discriminator;
         const author_id = interaction.user.id;
 
@@ -30,7 +30,11 @@ export default {
             .addField("Description", description)
             .addField("Author", author);
 
-        writeFileSync(`${PATHS.FEEDBACK_PENDING}/${new Date().toString()}.md`, `# ${title}\n\n${description}\n\nBy: ${author} (${author_id})`);
+
+        const filename = `${PATHS.FEEDBACK_PENDING}/${new Date().toDateString()} ${new Date().getTime()}.md`;
+        const content = `# ${title}\n\n## Description:\n${description}\n\n## By:\n${author} (${author_id})`;
+
+        writeFileSync(filename, content);
 
         return { ephemeral: true, embeds: [embed] };
     }

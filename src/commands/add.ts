@@ -40,12 +40,12 @@ export default {
         };
 
         const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
-        rest.put(
+        rest.post(
             Routes.applicationGuildCommands(interaction.client.application?.id, interaction.guild?.id),
-            { body: [command.commandJSON] },
+            { body: command.commandJSON },
         );
 
         writeFileSync(`${PATHS.CUSTOM_COMMANDS}/${name}.json`, JSON.stringify(command));
         return `Command \`${name}\` added!`;
     }
-} as unknown as BotCommand;
+} as BotCommand;

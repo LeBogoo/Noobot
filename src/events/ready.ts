@@ -22,7 +22,7 @@ export default async function (client: Client) {
      */
     const defaultCommands = readdirSync(PATHS.COMMANDS);
     for (let i = 0; i < defaultCommands.length; i++) {
-        const command = (await import(`.${PATHS.COMMANDS}${defaultCommands[i]}`)).default;
+        const command = (await import(`../commands/${defaultCommands[i]}`)).default;
         const commandName = defaultCommands[i].split('.')[0];
 
         const builder = command.builder as SlashCommandBuilder;
