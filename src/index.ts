@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 import { Client, Intents } from 'discord.js';
 import { readdirSync, mkdirSync } from 'fs';
+import { PATHS } from "./helper";
 dotenv.config();
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -9,8 +10,10 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
  * Create initial folder structure
  * @todo Make it server independent!
 */
-mkdirSync('./data/customCommands', { recursive: true });
-mkdirSync('./data/configs', { recursive: true });
+mkdirSync(PATHS.CUSTOM_COMMANDS, { recursive: true });
+mkdirSync(PATHS.CONFIGS, { recursive: true });
+mkdirSync(PATHS.FEEDBACK_DONE, { recursive: true });
+mkdirSync(PATHS.FEEDBACK_PENDING, { recursive: true });
 
 /**
  * Register all events listed in 'src/events' dir.

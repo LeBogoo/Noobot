@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v10";
 import { Client } from "discord.js";
 import { readdirSync, readFileSync } from "fs";
+import { PATHS } from "../helper";
 import { JsonCommand } from "../types";
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
@@ -16,10 +17,12 @@ export default async function (client: Client) {
 
     const commands: RESTPostAPIApplicationCommandsJSONBody[] = [];
 
-    const defaultCommands = readdirSync('./src/commands');
-
+    /**
+     * Add default commands
+     */
+    const defaultCommands = readdirSync(PATHS.COMMANDS);
     for (let i = 0; i < defaultCommands.length; i++) {
-        const command = (await import(`../commands/${defaultCommands[i]}`)).default;
+        const command = (await import(`.${PATHS.COMMANDS}${defaultCommands[i]}`)).default;
         const commandName = defaultCommands[i].split('.')[0];
 
         const builder = command.builder as SlashCommandBuilder;
@@ -29,17 +32,19 @@ export default async function (client: Client) {
     }
 
     /**
-     * Register custom commands
+     * Add custom commands
      * @todo Make it guild independent!
      */
-    const customCommands = readdirSync('./data/customCommands');
+    const customCommands = readdirSync(PATHS.CUSTOM_COMMANDS);
     for (let i = 0; i < customCommands.length; i++) {
-        const customCommand = readCommandFile(`./data/customCommands//${customCommands[i]}`)
+        const customCommand = readCommandFile(`${PATHS.CUSTOM_COMMANDS}/${customCommands[i]}`)
         commands.push(customCommand.commandJSON);
     }
 
+    /**
+     * Register all commands
+     */
     const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
-
     client.guilds.cache.forEach(guild => {
         rest.put(
             Routes.applicationGuildCommands(client.application?.id, guild.id),

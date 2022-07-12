@@ -1,13 +1,14 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed } from "discord.js";
 import { readdirSync } from "fs";
+import { PATHS } from "../helper";
 
 export default {
     builder: new SlashCommandBuilder()
         .setDescription("Lists all commands"),
 
     run: async function (interaction: CommandInteraction) {
-        const commands = readdirSync("./src/commands");
+        const commands = readdirSync(PATHS.COMMANDS);
         const embed = new MessageEmbed();
 
         for (const command of commands) {
