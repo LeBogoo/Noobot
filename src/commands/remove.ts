@@ -19,7 +19,7 @@ export default {
     run: async function (interaction: CommandInteraction) {
         const name = interaction.options.getString("name")?.toLocaleLowerCase() || "defaultname";
 
-        if (!isCustomCommand(name)) return `Command \`${name}\` doesnt exist!`;
+        if (!isCustomCommand(name, interaction.guild)) return `Command \`${name}\` doesnt exist!`;
 
         const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
 
@@ -34,7 +34,7 @@ export default {
                 command.id
         );
 
-        unlinkSync(`${PATHS.CUSTOM_COMMANDS}/${name}.json`);
+        unlinkSync(`${PATHS.guild_commands(interaction.guild?.id)}/${name}.json`);
 
         return `Command \`${name}\` removed!`;
     },

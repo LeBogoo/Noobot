@@ -17,10 +17,11 @@ export default async function (interaction: CommandInteraction) {
 
     /**
      * Handle custom commands
-     * @todo Make it guild independent!
      */
-    if (isCustomCommand(interaction.commandName)) {
-        const content = readFileSync(`${PATHS.CUSTOM_COMMANDS}/${interaction.commandName}.json`).toString();
+    if (isCustomCommand(interaction.commandName, interaction.guild)) {
+        const content = readFileSync(
+            `${PATHS.guild_commands(interaction.guild?.id)}/${interaction.commandName}.json`
+        ).toString();
         const command = JSON.parse(content) as JsonCommand;
         const result = command.response;
         if (result) interaction.reply(result);

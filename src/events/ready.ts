@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v10";
 import { Client } from "discord.js";
-import { readdirSync, readFileSync } from "fs";
+import { readdirSync, readFileSync, mkdirSync } from "fs";
 import { PATHS } from "../helper";
 import { JsonCommand } from "../types";
 const { REST } = require("@discordjs/rest");
@@ -32,22 +32,31 @@ export default async function (client: Client) {
     }
 
     /**
-     * Add custom commands
-     * @todo Make it guild independent!
-     */
-    const customCommands = readdirSync(PATHS.CUSTOM_COMMANDS);
-    for (let i = 0; i < customCommands.length; i++) {
-        const customCommand = readCommandFile(`${PATHS.CUSTOM_COMMANDS}/${customCommands[i]}`);
-        commands.push(customCommand.commandJSON);
-    }
-
-    /**
-     * Register all commands
+     * Register all commands to each guild
      */
     const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
     client.guilds.cache.forEach((guild) => {
+        /**
+         * Create directories for guild if they don't exist.
+         */
+
+        const customCommandPath = PATHS.guild_commands(guild.id);
+
+        mkdirSync(customCommandPath, { recursive: true });
+        mkdirSync(PATHS.guild_config(guild.id), { recursive: true });
+
+        /**
+         * Add custom commands
+         */
+        const customCommandsList = readdirSync(customCommandPath);
+        const customCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
+        for (let i = 0; i < customCommandsList.length; i++) {
+            const customCommand = readCommandFile(`${customCommandPath}/${customCommandsList[i]}`);
+            customCommands.push(customCommand.commandJSON);
+        }
+
         rest.put(Routes.applicationGuildCommands(client.application?.id, guild.id), {
-            body: commands,
+            body: [...commands, ...customCommands],
         });
     });
 }
