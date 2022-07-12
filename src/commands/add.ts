@@ -15,15 +15,20 @@ export default {
         .addStringOption((option) =>
             option.setName("description").setDescription("The description of the command.").setRequired(true)
         )
+
         .addStringOption((option) =>
             option.setName("response").setDescription("The response of the command.").setRequired(true)
         ),
     run: function (interaction: CommandInteraction) {
-        const name = interaction.options.getString("name") || "defaultname";
+        const name = interaction.options.getString("name")?.toLocaleLowerCase() || "defaultname";
         const description = interaction.options.getString("description") || "Default Description";
         const response = interaction.options.getString("response") || "Default Response";
 
         if (isCommand(name) || isCustomCommand(name)) return `Command \`${name}\` already exists!`;
+
+        if (response.length > 500) return "The response cannot exceed 500 characters.";
+        if (name.length > 100) return "The name cannot exceed 100 characters.";
+        if (description.length > 100) return "The description cannot exceed 100 characters.";
 
         const command: JsonCommand = {
             commandJSON: new SlashCommandBuilder().setName(name).setDescription(description).toJSON(),
