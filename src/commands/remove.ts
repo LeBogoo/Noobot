@@ -1,14 +1,17 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { ApplicationCommand, CommandInteraction } from "discord.js";
+import { CommandInteraction } from "discord.js";
 import { isCustomCommand, PATHS } from "../helper";
 import { unlinkSync } from "fs";
 import { BotCommand } from "../types";
 const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v10");
+const { Routes, PermissionFlagsBits } = require("discord-api-types/v10");
 
 export default {
     builder: new SlashCommandBuilder()
         .setDescription("Removes a custom command.")
+        .setDMPermission(false)
+        .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
+
         .addStringOption((option) =>
             option.setName("name").setDescription("The name of the command that should be removed.").setRequired(true)
         ),

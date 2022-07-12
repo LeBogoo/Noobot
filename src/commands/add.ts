@@ -4,11 +4,13 @@ import { writeFileSync } from "fs";
 import { isCommand, isCustomCommand, PATHS } from "../helper";
 import { BotCommand, JsonCommand } from "../types";
 const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v10");
+const { Routes, PermissionFlagsBits } = require("discord-api-types/v10");
 
 export default {
     builder: new SlashCommandBuilder()
         .setDescription("Adds a custom command.")
+        .setDMPermission(false)
+        .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
         .addStringOption((option) =>
             option.setName("name").setDescription("The name of the command.").setRequired(true)
         )
