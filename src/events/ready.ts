@@ -5,7 +5,7 @@ import { readdirSync, readFileSync } from "fs";
 import { PATHS } from "../helper";
 import { JsonCommand } from "../types";
 const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v9");
+const { Routes } = require("discord-api-types/v10");
 
 function readCommandFile(path): JsonCommand {
     return JSON.parse(readFileSync(path).toString());

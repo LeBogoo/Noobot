@@ -4,7 +4,7 @@ import { writeFileSync } from "fs";
 import { isCommand, isCustomCommand, PATHS } from "../helper";
 import { BotCommand, JsonCommand } from "../types";
 const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v9");
+const { Routes } = require("discord-api-types/v10");
 
 export default {
     builder: new SlashCommandBuilder()

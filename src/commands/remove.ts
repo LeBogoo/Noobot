@@ -4,7 +4,7 @@ import { isCustomCommand, PATHS } from "../helper";
 import { unlinkSync } from "fs";
 import { BotCommand } from "../types";
 const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v9");
+const { Routes } = require("discord-api-types/v10");
 
 export default {
     builder: new SlashCommandBuilder()
