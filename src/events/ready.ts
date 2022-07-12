@@ -1,3 +1,4 @@
+import { getConfig, saveConfig } from "../helper";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v10";
 import { Client } from "discord.js";
@@ -44,6 +45,9 @@ export default async function (client: Client) {
 
         mkdirSync(customCommandPath, { recursive: true });
         mkdirSync(PATHS.guild_config(guild.id), { recursive: true });
+
+        // Create config if it doesn't exist
+        saveConfig(getConfig(guild.id));
 
         /**
          * Add custom commands

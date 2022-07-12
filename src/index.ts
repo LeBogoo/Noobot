@@ -9,8 +9,6 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 /**
  * Create initial folder structure
  */
-mkdirSync(PATHS.CUSTOM_COMMANDS, { recursive: true });
-mkdirSync(PATHS.CONFIGS, { recursive: true });
 mkdirSync(PATHS.FEEDBACK_DONE, { recursive: true });
 mkdirSync(PATHS.FEEDBACK_PENDING, { recursive: true });
 

@@ -1,4 +1,6 @@
 import { Client, Guild } from "discord.js";
-export default function (client: Client, _guild: Guild) {
+import { getConfig, saveConfig } from "../helper";
+export default function (client: Client, guild: Guild) {
     client.user?.setActivity(`${client.guilds.cache.size} servers!`, { type: "WATCHING" });
+    saveConfig(getConfig(guild.id));
 }
