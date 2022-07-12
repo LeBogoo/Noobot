@@ -4,8 +4,7 @@ import { readdirSync } from "fs";
 import { PATHS } from "../helper";
 
 export default {
-    builder: new SlashCommandBuilder()
-        .setDescription("Lists all commands"),
+    builder: new SlashCommandBuilder().setDescription("Lists all commands"),
 
     run: async function (interaction: CommandInteraction) {
         const commands = readdirSync(PATHS.COMMANDS);
@@ -19,5 +18,5 @@ export default {
         }
 
         interaction.reply({ content: "Here is what i've found!", embeds: [embed] });
-    }
-}
+    },
+};

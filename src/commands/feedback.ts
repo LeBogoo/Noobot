@@ -6,15 +6,14 @@ import { PATHS } from "../helper";
 export default {
     builder: new SlashCommandBuilder()
         .setDescription("Give the developer feedback on bugs or additional features or ideas!")
-        .addStringOption((option) => option
-            .setName("title")
-            .setDescription("Short title about your problem/idea.")
-            .setRequired(true)
+        .addStringOption((option) =>
+            option.setName("title").setDescription("Short title about your problem/idea.").setRequired(true)
         )
-        .addStringOption((option) => option
-            .setName("description")
-            .setDescription("Describe your problem/idea in a little more detail!")
-            .setRequired(true)
+        .addStringOption((option) =>
+            option
+                .setName("description")
+                .setDescription("Describe your problem/idea in a little more detail!")
+                .setRequired(true)
         ),
 
     run: function (interaction: CommandInteraction) {
@@ -30,12 +29,11 @@ export default {
             .addField("Description", description)
             .addField("Author", author);
 
-
         const filename = `${PATHS.FEEDBACK_PENDING}/${new Date().toDateString()} ${new Date().getTime()}.md`;
         const content = `# ${title}\n\n## Description:\n${description}\n\n## By:\n${author} (${author_id})`;
 
         writeFileSync(filename, content);
 
         return { ephemeral: true, embeds: [embed] };
-    }
-}
+    },
+};

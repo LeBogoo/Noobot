@@ -1,20 +1,23 @@
 {
-  "name": "newbot",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "build": "tsc",
-    "start": "node -r dotenv/config ./prod/index.js"
-  },
-  "keywords": [],
-  "author": "LeBogo",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "@discordjs/builders": "^0.13.0",
-    "@discordjs/rest": "^0.4.1",
-    "discord-api-types": "^0.33.0",
-    "discord.js": "^13.8.1",
-    "dotenv": "^16.0.1"
-  }
+    "name": "newbot",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "build": "tsc",
+        "start": "node -r dotenv/config ./prod/index.js"
+    },
+    "keywords": [],
+    "author": "LeBogo",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "@discordjs/builders": "^0.13.0",
+        "@discordjs/rest": "^0.4.1",
+        "discord-api-types": "^0.33.0",
+        "discord.js": "^13.8.1",
+        "dotenv": "^16.0.1"
+    },
+    "devDependencies": {
+        "prettier": "^2.7.1"
+    }
 }
