@@ -32,6 +32,15 @@ export default async function (client: Client) {
         commands.push(builder.toJSON());
     }
 
+    const contextMenus = readdirSync(PATHS.CONTEXT_MENUS);
+    for (let i = 0; i < contextMenus.length; i++) {
+        const command = (await import(`../contextMenus/${contextMenus[i]}`)).default;
+        const commandName = contextMenus[i].split(".")[0];
+        const builder = command.builder as SlashCommandBuilder;
+        builder.setName(commandName);
+        commands.push(builder.toJSON());
+    }
+
     /**
      * Register all commands to each guild
      */
@@ -42,9 +51,7 @@ export default async function (client: Client) {
          */
 
         const customCommandPath = PATHS.guild_commands(guild.id);
-
         mkdirSync(customCommandPath, { recursive: true });
-        mkdirSync(PATHS.guild_config(guild.id), { recursive: true });
 
         // Create config if it doesn't exist
         saveConfig(getConfig(guild.id));

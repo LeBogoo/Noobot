@@ -1,10 +1,11 @@
 import { Guild } from "discord.js";
-import { readdirSync, writeFileSync, readFileSync } from "fs";
+import { readdirSync, writeFileSync, readFileSync, mkdirSync } from "fs";
 import { GuildConfig } from "./types";
 
 export const PATHS = {
     DATA: "./data",
     COMMANDS: "./src/commands",
+    CONTEXT_MENUS: "./src/contextMenus",
     CUSTOM_COMMANDS: "./data/customCommands",
     CONFIGS: "./data/configs",
     FEEDBACK_DONE: "./data/feedback/done",
@@ -52,6 +53,7 @@ export function getConfig(guildId: string | null): GuildConfig {
  * @param config Config to be saved.
  */
 export function saveConfig(config: GuildConfig) {
+    mkdirSync(PATHS.guild_config(config.id), { recursive: true });
     writeFileSync(`${PATHS.guild_config(config.id || "")}/config.json`, JSON.stringify(config));
 }
 
