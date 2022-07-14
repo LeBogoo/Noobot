@@ -20,5 +20,6 @@ $ ts-node src/index.ts
 
 -   Reaction roles (WIP, Waiting for Discord to add Role selects)
 -   Levelsystem
+-   Polls
 -   Config
 -   Quotes
