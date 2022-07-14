@@ -6,7 +6,7 @@ import { GuildConfig } from "../Config";
 export default function (client: Client, guild: Guild) {
     client.user?.setActivity(`${client.guilds.cache.size} servers!`, { type: "WATCHING" });
 
-    const customCommandPath = PATHS.guild_commands(guild.id);
+    const customCommandPath = `${PATHS.guild_folder(guild.id)}/customCommands`;
     mkdirSync(customCommandPath, { recursive: true });
 
     GuildConfig.load(guild.id).save();

@@ -9,8 +9,7 @@ export const PATHS = {
     CONFIGS: "./data/configs",
     FEEDBACK_DONE: "./data/feedback/done",
     FEEDBACK_PENDING: "./data/feedback/pending",
-    guild_commands: (guildId: string | null | undefined) => `./data/customCommands/${guildId}`,
-    guild_config: (guildId: string) => `./data/configs/${guildId}`,
+    guild_folder: (guildId: string | null | undefined) => `./data/${guildId}`,
 };
 
 /**
@@ -27,6 +26,6 @@ export function isCommand(name: string): boolean {
  * @returns If this custom command exists
  */
 export function isCustomCommand(name: string, guild: Guild | null): boolean {
-    const commands = readdirSync(PATHS.guild_commands(guild?.id));
+    const commands = readdirSync(`${PATHS.guild_folder(guild?.id)}/customCommands`);
     return commands.includes(`${name}.json`);
 }

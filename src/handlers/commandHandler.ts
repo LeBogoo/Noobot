@@ -18,10 +18,9 @@ export default async function (interaction: CommandInteraction) {
     /**
      * Handle custom commands
      */
-
     if (isCustomCommand(interaction.commandName, interaction.guild)) {
         const content = readFileSync(
-            `${PATHS.guild_commands(interaction.guild?.id)}/${interaction.commandName}.json`
+            `${PATHS.guild_folder(interaction.guild?.id)}/customCommands/${interaction.commandName}.json`
         ).toString();
         const command = JSON.parse(content) as JsonCommand;
         const result = command.response;

@@ -1,6 +1,6 @@
 import { Emoji, Message, Role, TextChannel } from "discord.js";
+import { mkdirSync, readFileSync, writeFileSync } from "fs";
 import { PATHS } from "./helper";
-import { mkdirSync, writeFileSync, readFileSync } from "fs";
 
 export class GuildConfig {
     id: string = "";
@@ -22,13 +22,13 @@ export class GuildConfig {
     }
 
     save() {
-        mkdirSync(PATHS.guild_config(this.id), { recursive: true });
-        writeFileSync(`${PATHS.guild_config(this.id || "")}/config.json`, JSON.stringify(this));
+        mkdirSync(PATHS.guild_folder(this.id), { recursive: true });
+        writeFileSync(`${PATHS.guild_folder(this.id || "")}/config.json`, JSON.stringify(this, null, 4));
     }
 
     static load(id: string): GuildConfig {
         try {
-            let loaded = JSON.parse(readFileSync(`${PATHS.guild_config(id || "")}/config.json`).toString());
+            let loaded = JSON.parse(readFileSync(`${PATHS.guild_folder(id || "")}/config.json`).toString());
             return Object.assign(new GuildConfig(id), loaded);
         } catch {
             return new GuildConfig(id);
@@ -63,27 +63,3 @@ export type BirthDate = {
     day: number;
     month: number;
 };
-
-// /**
-//  * Helper function to load a GuildConfig object from its default location.
-//  * @param guildId Id of the guild
-//  * @returns Saved config if found, otherwise newly created config
-//  */
-// export function getConfig(guildId: string | null): GuildConfig {
-//     let config: GuildConfig;
-//     try {
-//         config = JSON.parse(readFileSync(`${PATHS.guild_config(guildId || "")}/config.json`).toString());
-//     } catch (_) {
-//         config = createConfig(guildId || "");
-//     }
-//     return config;
-// }
-
-// /**
-//  * Helper function to save a GuildConfig object. It automatically saves it at the right location.
-//  * @param config Config to be saved.
-//  */
-// export function saveConfig(config: GuildConfig) {
-//     mkdirSync(PATHS.guild_config(config.id), { recursive: true });
-//     writeFileSync(`${PATHS.guild_config(config.id || "")}/config.json`, JSON.stringify(config));
-// }

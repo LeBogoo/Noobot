@@ -45,7 +45,10 @@ export default {
             body: command.commandJSON,
         });
 
-        writeFileSync(`${PATHS.guild_commands(interaction.guild?.id)}/${name}.json`, JSON.stringify(command));
+        writeFileSync(
+            `${PATHS.guild_folder(interaction.guild?.id)}/customCommands/${name}.json`,
+            JSON.stringify(command)
+        );
         return `Command \`${name}\` added!`;
     },
 } as BotCommand;

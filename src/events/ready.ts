@@ -50,7 +50,7 @@ export default async function (client: Client) {
          * Create directories for guild if they don't exist.
          */
 
-        const customCommandPath = PATHS.guild_commands(guild.id);
+        const customCommandPath = `${PATHS.guild_folder(guild.id)}/customCommands`;
         mkdirSync(customCommandPath, { recursive: true });
 
         // Create config if it doesn't exist

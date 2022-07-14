@@ -34,7 +34,7 @@ export default {
                 command.id
         );
 
-        unlinkSync(`${PATHS.guild_commands(interaction.guild?.id)}/${name}.json`);
+        unlinkSync(`${PATHS.guild_folder(interaction.guild?.id)}/customCommands/${name}.json`);
 
         return `Command \`${name}\` removed!`;
     },
