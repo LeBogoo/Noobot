@@ -1,6 +1,7 @@
 import { Client, Guild } from "discord.js";
-import { getConfig, PATHS, saveConfig } from "../helper";
+import { PATHS } from "../helper";
 import { mkdirSync } from "fs";
+import { GuildConfig } from "../Config";
 
 export default function (client: Client, guild: Guild) {
     client.user?.setActivity(`${client.guilds.cache.size} servers!`, { type: "WATCHING" });
@@ -8,5 +9,5 @@ export default function (client: Client, guild: Guild) {
     const customCommandPath = PATHS.guild_commands(guild.id);
     mkdirSync(customCommandPath, { recursive: true });
 
-    saveConfig(getConfig(guild.id));
+    GuildConfig.load(guild.id).save();
 }
