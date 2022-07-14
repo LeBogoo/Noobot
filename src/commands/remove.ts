@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import { unlinkSync } from "fs";
-import { isCustomCommand, PATHS } from "../helper";
+import { isCommand, isCustomCommand, PATHS } from "../helper";
 import { BotCommand } from "../types";
 const { REST } = require("@discordjs/rest");
 const { Routes, PermissionFlagsBits } = require("discord-api-types/v10");
@@ -19,6 +19,7 @@ export default {
     run: async function (interaction: CommandInteraction) {
         const name = interaction.options.getString("name")?.toLocaleLowerCase() || "defaultname";
 
+        if (isCommand(name)) return `You cannot remove the default commands.`;
         if (!isCustomCommand(name, interaction.guild)) return `Command \`${name}\` doesnt exist!`;
 
         const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);

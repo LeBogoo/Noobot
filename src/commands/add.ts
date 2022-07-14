@@ -26,7 +26,8 @@ export default {
         const description = interaction.options.getString("description") || "Default Description";
         const response = interaction.options.getString("response") || "Default Response";
 
-        if (isCommand(name) || isCustomCommand(name, interaction.guild)) return `Command \`${name}\` already exists!`;
+        if (isCommand(name)) return `You cannot overwrite the default commands.`;
+        if (isCustomCommand(name, interaction.guild)) return `Command \`${name}\` already exists!`;
 
         if (!name.match(/^([a-z0-9]{1,30})$/))
             return "Only a maximum of 30 lowercase Latin letters and numbers from 0 to 9 are allowed as name.";
