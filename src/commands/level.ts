@@ -36,12 +36,13 @@ export default {
         if (useText) {
             const embed = new MessageEmbed();
             embed.setTitle(`${levelUser.username} - Level`);
-            embed.setDescription(`Level: ${levelUser.level} | XP: ${levelUser.relativeXp} | Rank ${levelUser.rank}`);
-            embed.setFooter({
-                text:
-                    `Progress: ${levelUser.relativeXp}/${levelUser.relativeNextLevelXp}\n` +
-                    `${percentToBars(levelUser.percentage, 10)} (${Math.floor(levelUser.percentage * 100)}%)`,
-            });
+            embed.setDescription(
+                `Level: ${levelUser.level} | XP: ${levelUser.relativeXp} | Rank ${levelUser.rank}` +
+                `Progress: ${levelUser.relativeXp}/${levelUser.relativeNextLevelXp}\n` +
+                `${percentToBars(levelUser.percentage, 10)} (${Math.floor(
+                    levelUser.percentage * 100
+                )}%)`
+            );
 
             return { embeds: [embed] };
             // return "```json\n" + JSON.stringify(levelUser, null, 2) + "\n```";
