@@ -1,5 +1,5 @@
 import { Guild } from "discord.js";
-import { readdirSync, writeFileSync, readFileSync, mkdirSync } from "fs";
+import { readdirSync } from "fs";
 
 export const PATHS = {
     DATA: "./data",

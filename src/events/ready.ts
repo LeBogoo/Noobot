@@ -1,10 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v10";
 import { Client } from "discord.js";
-import { readdirSync, readFileSync, mkdirSync } from "fs";
+import { mkdirSync, readdirSync, readFileSync } from "fs";
+import { GuildConfig } from "../Config";
 import { PATHS } from "../helper";
 import { JsonCommand } from "../types";
-import { GuildConfig } from "../Config";
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v10");
 

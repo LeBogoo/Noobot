@@ -1,5 +1,5 @@
 import { ContextMenuCommandBuilder } from "@discordjs/builders";
-import { PermissionFlagsBits, ApplicationCommandType } from "discord-api-types/v10";
+import { ApplicationCommandType, PermissionFlagsBits } from "discord-api-types/v10";
 import {
     Message,
     MessageActionRow,

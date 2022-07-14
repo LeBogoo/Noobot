@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
-import { isCustomCommand, PATHS } from "../helper";
 import { unlinkSync } from "fs";
+import { isCustomCommand, PATHS } from "../helper";
 import { BotCommand } from "../types";
 const { REST } = require("@discordjs/rest");
 const { Routes, PermissionFlagsBits } = require("discord-api-types/v10");
