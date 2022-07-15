@@ -56,11 +56,11 @@ export class LevelStorage {
 
     getLevelUser(user: User): LevelUser {
         const xp = this.getLevelUserXp(user);
-        const level = xpToLevel(xp, this.guildId);
-        const currentLevelXp = levelToXp(level, this.guildId);
-        const nextLevelXp = levelToXp(level + 1, this.guildId);
-        const relativePoints = xp - currentLevelXp;
-        const relativeNextLevelPoints = nextLevelXp - currentLevelXp;
+        const level = Math.max(0, xpToLevel(xp, this.guildId));
+        const currentLevelXp = Math.max(0, levelToXp(level, this.guildId));
+        const nextLevelXp = Math.max(0, levelToXp(level + 1, this.guildId));
+        const relativePoints = Math.max(0, xp - currentLevelXp);
+        const relativeNextLevelPoints = Math.max(nextLevelXp - currentLevelXp);
 
         const levelUser: LevelUser = {
             id: user.id,
@@ -73,15 +73,13 @@ export class LevelStorage {
             nextLevelXp,
             relativeXp: relativePoints,
             relativeNextLevelXp: relativeNextLevelPoints,
-            percentage: relativePoints / relativeNextLevelPoints,
+            percentage: Math.max(0, relativePoints / relativeNextLevelPoints),
         };
         return levelUser;
     }
 
     getLevelUserXp(user: User): number {
-        console.log(this.points);
-
-        return this.points[user.id] || 0;
+        return Math.max(this.points[user.id] || 0, 0);
     }
 
     setLevelUserXp(user: User, xp: number) {
@@ -89,7 +87,7 @@ export class LevelStorage {
     }
 
     addLevelUserXp(user: User, xp: number) {
-        const currentXp = this.getLevelUserXp(user) || 0;
+        const currentXp = this.getLevelUserXp(user);
         this.setLevelUserXp(user, currentXp + xp);
     }
 

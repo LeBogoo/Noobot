@@ -4,19 +4,32 @@ import { PATHS } from "./helper";
 
 export class GuildConfig {
     id: string = "";
-    reactionMessages: ReactionMessage[] = [];
+    reactionMessages: ReactionMessageConfig = {
+        enabled: false,
+        messages: [],
+    };
+
+    customCommands: CustomCommandsConfig = {
+        enabled: true,
+    };
+
     twitch: TwitchConfig = {
+        enabled: true,
         streamers: [],
         liveMessages: [],
         streamersLive: [],
         lastStreams: new Map<string, number>(),
         announcementChannel: null,
     };
+
     levelsystem: LevelsystemConfig = {
+        enabled: true,
         announcementChannel: null,
         color: "ffffff",
     };
+
     birthdays: BirthdayConfig = {
+        enabled: true,
         birthdays: new Map<string, BirthDate>(),
         announcementChannel: null,
     };
@@ -40,28 +53,38 @@ export class GuildConfig {
     }
 }
 
+export interface ModuleConfig {
+    enabled: boolean;
+}
+
 export type ReactionMessage = {
     message: Message;
     roles: Map<Emoji, Role>;
 };
 
-export type TwitchConfig = {
+export interface TwitchConfig extends ModuleConfig {
     streamers: string[];
     liveMessages: string[];
     streamersLive: string[];
     lastStreams: Map<string, number>;
     announcementChannel: TextChannel | null;
-};
+}
 
-export type LevelsystemConfig = {
+export interface CustomCommandsConfig extends ModuleConfig {}
+
+export interface ReactionMessageConfig extends ModuleConfig {
+    messages: ReactionMessage[];
+}
+
+export interface LevelsystemConfig extends ModuleConfig {
     announcementChannel: TextChannel | null;
     color: string;
-};
+}
 
-export type BirthdayConfig = {
+export interface BirthdayConfig extends ModuleConfig {
     birthdays: Map<string, BirthDate>;
     announcementChannel: TextChannel | null;
-};
+}
 
 export type BirthDate = {
     day: number;

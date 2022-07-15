@@ -4,16 +4,19 @@ import { LevelStorage, LevelUser } from "../LevelStorage";
 import { BotCommand } from "../types";
 import { createCanvas, Image, ImageData, loadImage, GlobalFonts } from "@napi-rs/canvas";
 import { roundRect } from "../helper";
-import fetch from "node-fetch";
 import { GuildConfig } from "../Config";
 
 async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<MessageAttachment> {
     const config = GuildConfig.load(guild.id);
     const barWidth = 520;
+    const barThickness = 26;
     const pfp = await loadImage(levelUser.pictureURL);
     const canvas = createCanvas(720, 200);
     const ctx = canvas.getContext("2d");
-    const background = await loadImage(`./data/${guild.id}/LevelBackdrop.png`);
+    let background;
+    try {
+        background = await loadImage(`./data/${guild.id}/LevelBackdrop.png`);
+    } catch (_) {}
     GlobalFonts.registerFromPath("./src/assets/RobotoCondensed-Light.ttf", "RobotoCondensedLight");
 
     // Background (masked)
@@ -21,7 +24,11 @@ async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<M
     roundRect(ctx, padding, padding, canvas.width - 2 * padding, canvas.height - 2 * padding, 20, false, false);
     ctx.save();
     ctx.clip();
-    ctx.drawImage(background, 0, 0);
+    if (background) ctx.drawImage(background, 0, 0);
+    else {
+        ctx.fillStyle = "#339e85";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
     ctx.restore();
 
     // Set styles for texts and fills
@@ -47,7 +54,7 @@ async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<M
 
     // Username (limited to 20 chars)
     ctx.font = "52px RobotoCondensedLight";
-    let nameText = levelUser.username.slice(0, 20);
+    let nameText = levelUser.username.slice(0, 12);
     ctx.fillText(nameText == levelUser.username ? nameText : `${nameText}...`, 188, 83);
 
     // Rank and Level
@@ -60,11 +67,20 @@ async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<M
     ctx.fillText(`${Math.max(0, levelUser.relativeXp)} / ${levelUser.relativeNextLevelXp} XP`, 360, 140);
 
     ctx.fillStyle = `#${config.levelsystem.color}33`; // make this transparent
-    roundRect(ctx, 172, 148, barWidth, 26, 13, true, false);
+    roundRect(ctx, 172, 148, barWidth, barThickness, barThickness / 2, true, false);
 
     // draw roundRect again with percentage as width
     ctx.fillStyle = `#${config.levelsystem.color}`;
-    roundRect(ctx, 172, 148, barWidth * levelUser.percentage, 26, 13, true, false);
+    roundRect(
+        ctx,
+        172,
+        148,
+        Math.max(barThickness, barWidth * levelUser.percentage),
+        barThickness,
+        barThickness / 2,
+        true,
+        false
+    );
 
     return new MessageAttachment(canvas.toBuffer("image/png"), `${levelUser.username}-level.png`);
 }

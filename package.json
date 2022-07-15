@@ -17,9 +17,11 @@
         "@napi-rs/canvas": "^0.1.25",
         "discord-api-types": "^0.36.1",
         "discord.js": "^13.8.1",
-        "dotenv": "^16.0.1"
+        "dotenv": "^16.0.1",
+        "gm": "^1.23.1"
     },
     "devDependencies": {
+        "@types/gm": "^1.18.12",
         "prettier": "^2.7.1"
     }
 }
