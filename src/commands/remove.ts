@@ -10,7 +10,7 @@ export default {
     builder: new SlashCommandBuilder()
         .setDescription("Removes a custom command.")
         .setDMPermission(false)
-        .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
 
         .addStringOption((option) =>
             option.setName("name").setDescription("The name of the command that should be removed.").setRequired(true)

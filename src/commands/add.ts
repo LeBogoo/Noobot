@@ -10,7 +10,7 @@ export default {
     builder: new SlashCommandBuilder()
         .setDescription("Adds a custom command.")
         .setDMPermission(false)
-        .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
         .addStringOption((option) =>
             /**
              * @todo: Limit max length to 30 if feature is supported by discord.js
