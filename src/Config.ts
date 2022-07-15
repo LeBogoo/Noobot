@@ -12,6 +12,10 @@ export class GuildConfig {
         lastStreams: new Map<string, number>(),
         announcementChannel: null,
     };
+    levelsystem: LevelsystemConfig = {
+        announcementChannel: null,
+        color: "ffffff",
+    };
     birthdays: BirthdayConfig = {
         birthdays: new Map<string, BirthDate>(),
         announcementChannel: null,
@@ -51,7 +55,7 @@ export type TwitchConfig = {
 
 export type LevelsystemConfig = {
     announcementChannel: TextChannel | null;
-    levelFunction: (xp: number) => number;
+    color: string;
 };
 
 export type BirthdayConfig = {

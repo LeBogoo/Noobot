@@ -65,7 +65,7 @@ export class LevelStorage {
         const levelUser: LevelUser = {
             id: user.id,
             username: user.username,
-            pictureURL: user.displayAvatarURL(),
+            pictureURL: user.displayAvatarURL({ size: 128 }),
             rank: this.getLevelUserRank(user),
             xp,
             level,

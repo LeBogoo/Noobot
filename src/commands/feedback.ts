@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { CommandInteraction, MessageEmbed, ReplyMessageOptions } from "discord.js";
 import { writeFileSync } from "fs";
 import { PATHS } from "../helper";
 
