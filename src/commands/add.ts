@@ -12,6 +12,9 @@ export default {
         .setDMPermission(false)
         .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
         .addStringOption((option) =>
+            /**
+             * @todo: Limit max length to 30 if feature is supported by discord.js
+             */
             option.setName("name").setDescription("The name of the command.").setRequired(true)
         )
         .addStringOption((option) =>
