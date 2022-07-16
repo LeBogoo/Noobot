@@ -16,7 +16,7 @@ async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<M
     let background;
     try {
         background = await loadImage(`./data/${guild.id}/LevelBackdrop.png`);
-    } catch (_) {}
+    } catch (_) { }
     GlobalFonts.registerFromPath("./src/assets/RobotoCondensed-Light.ttf", "RobotoCondensedLight");
 
     // Background (masked)
@@ -127,7 +127,7 @@ export default {
 
     run: async function (interaction: CommandInteraction) {
         const useText = interaction.options.getBoolean("textversion") || false;
-        let selectedUser = interaction.options.getUser("user")
+        const selectedUser = interaction.options.getUser("user")
             ? interaction.options.getUser("user")
             : interaction.member!.user;
 
@@ -140,8 +140,8 @@ export default {
             embed.setTitle(`${levelUser.username} - Level`);
             embed.setDescription(
                 `Level: ${levelUser.level} | XP: ${levelUser.relativeXp} | Rank ${levelUser.rank}` +
-                    `Progress: ${levelUser.relativeXp}/${levelUser.relativeNextLevelXp}\n` +
-                    `${percentToBars(levelUser.percentage, 10)} (${Math.floor(levelUser.percentage * 100)}%)`
+                `Progress: ${levelUser.relativeXp}/${levelUser.relativeNextLevelXp}\n` +
+                `${percentToBars(levelUser.percentage, 10)} (${Math.floor(levelUser.percentage * 100)}%)`
             );
             return { embeds: [embed] };
         }
