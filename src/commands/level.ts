@@ -5,7 +5,7 @@ import { GuildConfig } from "../Config";
 import { roundRect } from "../helper";
 import { LevelStorage, LevelUser } from "../LevelStorage";
 import { BotCommand } from "../types";
-
+import runes from "runes";
 async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<MessageAttachment> {
     const config = GuildConfig.load(guild.id);
     const barWidth = 520;
@@ -55,7 +55,7 @@ async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<M
 
     // Username (limited to 20 chars)
     ctx.font = '52px "RobotoCondensed-Light, sans-serif"';
-    let nameText = levelUser.username.slice(0, 12);
+    let nameText = runes.substr(levelUser.username, 0, 12);
     ctx.fillText(nameText == levelUser.username ? nameText : `${nameText}...`, 188, 83);
 
     // Rank and Level
