@@ -1,4 +1,4 @@
-import { GuildMember, User } from "discord.js";
+import { User } from "discord.js";
 import { mkdirSync, readFileSync, writeFileSync } from "fs";
 import { PATHS } from "./helper";
 

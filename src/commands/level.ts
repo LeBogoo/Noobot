@@ -1,11 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
+import { createCanvas, loadImage, registerFont } from "canvas";
 import { CommandInteraction, Guild, MessageAttachment, MessageEmbed, User } from "discord.js";
+import { GuildConfig } from "../Config";
+import { roundRect } from "../helper";
 import { LevelStorage, LevelUser } from "../LevelStorage";
 import { BotCommand } from "../types";
-import { createCanvas, loadImage, registerFont } from 'canvas';
-import { roundRect } from "../helper";
-import { GuildConfig } from "../Config";
-import path from 'path';
 
 async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<MessageAttachment> {
     const config = GuildConfig.load(guild.id);
@@ -17,9 +16,9 @@ async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<M
     let background;
     try {
         background = await loadImage(`./data/${guild.id}/LevelBackdrop.png`);
-    } catch (_) { }
+    } catch (_) {}
 
-    registerFont('./src/assets/RobotoCondensed-Light.ttf', { family: 'RobotoCondensed-Light' })
+    registerFont("./src/assets/RobotoCondensed-Light.ttf", { family: "RobotoCondensed-Light" });
 
     // Background (masked)
     const padding = 3;
@@ -142,8 +141,8 @@ export default {
             embed.setTitle(`${levelUser.username} - Level`);
             embed.setDescription(
                 `Level: ${levelUser.level} | XP: ${levelUser.relativeXp} | Rank ${levelUser.rank}` +
-                `Progress: ${levelUser.relativeXp}/${levelUser.relativeNextLevelXp}\n` +
-                `${percentToBars(levelUser.percentage, 10)} (${Math.floor(levelUser.percentage * 100)}%)`
+                    `Progress: ${levelUser.relativeXp}/${levelUser.relativeNextLevelXp}\n` +
+                    `${percentToBars(levelUser.percentage, 10)} (${Math.floor(levelUser.percentage * 100)}%)`
             );
             return { embeds: [embed] };
         }
