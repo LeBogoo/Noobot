@@ -129,7 +129,7 @@ export default {
 
     run: async function (interaction: CommandInteraction) {
         const useText = interaction.options.getBoolean("textversion") || false;
-        let selectedUser = interaction.options.getUser("user")
+        const selectedUser = interaction.options.getUser("user")
             ? interaction.options.getUser("user")
             : interaction.member!.user;
 
