@@ -57,17 +57,16 @@ export interface ModuleConfig {
     enabled: boolean;
 }
 
-export type ReactionMessage = {
-    message: Message;
-    roles: Map<Emoji, Role>;
-};
+export interface AnnouncementConfig extends ModuleConfig {
+    announcementChannel: string | null;
+}
 
-export interface TwitchConfig extends ModuleConfig {
+export interface TwitchConfig extends AnnouncementConfig {
     streamers: string[];
     liveMessages: string[];
     streamersLive: string[];
     lastStreams: Map<string, number>;
-    announcementChannel: TextChannel | null;
+    announcementChannel: string | null;
 }
 
 export interface CustomCommandsConfig extends ModuleConfig {}
@@ -76,17 +75,20 @@ export interface ReactionMessageConfig extends ModuleConfig {
     messages: ReactionMessage[];
 }
 
-export interface LevelsystemConfig extends ModuleConfig {
-    announcementChannel: TextChannel | null;
+export interface LevelsystemConfig extends AnnouncementConfig {
     color: string;
 }
 
-export interface BirthdayConfig extends ModuleConfig {
+export interface BirthdayConfig extends AnnouncementConfig {
     birthdays: Map<string, BirthDate>;
-    announcementChannel: TextChannel | null;
 }
 
 export type BirthDate = {
     day: number;
     month: number;
+};
+
+export type ReactionMessage = {
+    message: Message;
+    roles: Map<Emoji, Role>;
 };
