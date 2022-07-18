@@ -18,8 +18,14 @@ $ ts-node src/index.ts
 
 ## Todos
 
--   Reaction roles (WIP, Waiting for Discord to add Role selects)
--   Levelsystem
+-   Database
+-   Ranklist
 -   Polls
--   Config
+-   Configurable modules (on/off (Commands))
+-   Member Count
+-   Bdays
 -   Quotes
+-   YouTube
+-   Twitch
+-   Music
+-   Reaction roles (WIP, Waiting for Discord to add Role selects)
