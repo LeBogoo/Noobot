@@ -2,22 +2,24 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, Guild, MessageAttachment, MessageEmbed, User } from "discord.js";
 import { LevelStorage, LevelUser } from "../LevelStorage";
 import { BotCommand } from "../types";
-import { createCanvas, Image, ImageData, loadImage, GlobalFonts } from "@napi-rs/canvas";
+import { createCanvas, loadImage, registerFont } from 'canvas';
 import { roundRect } from "../helper";
 import { GuildConfig } from "../Config";
+import path from 'path';
 
 async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<MessageAttachment> {
     const config = GuildConfig.load(guild.id);
     const barWidth = 520;
     const barThickness = 26;
-    const pfp = await loadImage(levelUser.pictureURL);
+    const pfp = await loadImage(levelUser.pictureURL.replace("webp", "png"));
     const canvas = createCanvas(720, 200);
     const ctx = canvas.getContext("2d");
     let background;
     try {
         background = await loadImage(`./data/${guild.id}/LevelBackdrop.png`);
-    } catch (_) {}
-    GlobalFonts.registerFromPath("./src/assets/RobotoCondensed-Light.ttf", "RobotoCondensedLight");
+    } catch (_) { }
+
+    registerFont('./src/assets/RobotoCondensed-Light.ttf', { family: 'RobotoCondensed-Light' })
 
     // Background (masked)
     const padding = 3;
@@ -53,17 +55,17 @@ async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<M
     ctx.stroke();
 
     // Username (limited to 20 chars)
-    ctx.font = "52px RobotoCondensedLight";
+    ctx.font = '52px "RobotoCondensed-Light, sans-serif"';
     let nameText = levelUser.username.slice(0, 12);
     ctx.fillText(nameText == levelUser.username ? nameText : `${nameText}...`, 188, 83);
 
     // Rank and Level
-    ctx.font = "40px RobotoCondensedLight";
+    ctx.font = '40px "RobotoCondensed-Light"';
     ctx.fillText(`Rang: ${levelUser.rank}`, 557, 70);
     ctx.fillText(`Level: ${levelUser.level}\n`, 557, 115);
 
     // Progress text
-    ctx.font = "25px RobotoCondensedLight";
+    ctx.font = '25px "RobotoCondensed-Light"';
     ctx.fillText(`${Math.max(0, levelUser.relativeXp)} / ${levelUser.relativeNextLevelXp} XP`, 360, 140);
 
     ctx.fillStyle = `#${config.levelsystem.color}33`; // make this transparent
@@ -82,7 +84,7 @@ async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<M
         false
     );
 
-    return new MessageAttachment(canvas.toBuffer("image/png"), `${levelUser.username}-level.png`);
+    return new MessageAttachment(canvas.toBuffer(), `${levelUser.username}-level.png`);
 }
 
 function percentToBars(percent: number, width: number): string {
@@ -140,8 +142,8 @@ export default {
             embed.setTitle(`${levelUser.username} - Level`);
             embed.setDescription(
                 `Level: ${levelUser.level} | XP: ${levelUser.relativeXp} | Rank ${levelUser.rank}` +
-                    `Progress: ${levelUser.relativeXp}/${levelUser.relativeNextLevelXp}\n` +
-                    `${percentToBars(levelUser.percentage, 10)} (${Math.floor(levelUser.percentage * 100)}%)`
+                `Progress: ${levelUser.relativeXp}/${levelUser.relativeNextLevelXp}\n` +
+                `${percentToBars(levelUser.percentage, 10)} (${Math.floor(levelUser.percentage * 100)}%)`
             );
             return { embeds: [embed] };
         }
