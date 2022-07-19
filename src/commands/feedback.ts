@@ -37,7 +37,7 @@ export default {
             .addField("Author", author);
 
         const filename = `${PATHS.FEEDBACK_PENDING}/${new Date().toDateString()} ${new Date().getTime()}.md`;
-        const content = `# ${title}\n\n## Description:\n${description}\n\n## By:\n${author} (${author_id})`;
+        const content = `# Title: \n${title}\n\n## Description:\n${description}\n\n## By:\n${author} (${author_id})`;
 
         writeFileSync(filename, content);
 
