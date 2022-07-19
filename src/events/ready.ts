@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 import { loadConfig } from "../Config";
 import { PATHS } from "../helper";
 import { JsonCommand } from "../types";
+import dotenv from "dotenv";
+dotenv.config();
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v10");
 
@@ -18,7 +20,7 @@ export default async function (client: Client) {
     client.user?.setActivity(`${client.guilds.cache.size} servers!`, { type: "WATCHING" });
 
     await mongoose.connect(
-        `mongodb://localhost:27017/${client.user?.username || "unknownClient"}`,
+        `${process.env.DB_URL || ""}${client.user?.username || "unknownClient"}`,
         {
             useNewUrlParser: true,
             useUnifiedTopology: true,
