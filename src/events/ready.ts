@@ -61,9 +61,14 @@ export default async function (client: Client) {
         /**
          * Create directories for guild if they don't exist.
          */
-
         const customCommandPath = `${PATHS.guild_folder(guild.id)}/customCommands`;
         mkdirSync(customCommandPath, { recursive: true });
+
+        /**
+         * Create default  configs if they don't exist.
+         */
+        const guildConfig = await loadConfig(guild.id);
+        guildConfig.save();
 
         /**
          * Add custom commands
