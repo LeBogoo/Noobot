@@ -20,13 +20,15 @@ export default async function (client: Client) {
     client.user?.setActivity(`${client.guilds.cache.size} servers!`, { type: "WATCHING" });
 
     await mongoose.connect(
-        `${process.env.DB_URL || ""}${client.user?.username || "unknownClient"}`,
+        // Look at .env_examle for a template!
+        `${process.env.DB_URL || "mongodb://localhost:27017"}${client.user?.username || "unknownClient"}`,
         {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         },
-        () => {
-            console.log("Connected to database!");
+        (error) => {
+            if (error) console.log(error.message);
+            else console.log("Connected to database!");
         }
     );
 
