@@ -1,56 +1,86 @@
-import { Emoji, Message, Role, TextChannel } from "discord.js";
-import { mkdirSync, readFileSync, writeFileSync } from "fs";
-import { PATHS } from "./helper";
+import { Emoji, Message, Role } from "discord.js";
+import mongoose from "mongoose";
 
-export class GuildConfig {
-    id: string = "";
-    reactionMessages: ReactionMessageConfig = {
-        enabled: false,
+const configSchema = new mongoose.Schema<Config>({
+    id: String,
+    reactionMessages: {
+        enabled: Boolean,
         messages: [],
-    };
-
-    customCommands: CustomCommandsConfig = {
-        enabled: true,
-    };
-
-    twitch: TwitchConfig = {
-        enabled: true,
+    },
+    customCommands: {
+        enabled: Boolean,
+    },
+    twitch: {
+        enabled: Boolean,
         streamers: [],
         liveMessages: [],
         streamersLive: [],
-        lastStreams: new Map<string, number>(),
-        announcementChannel: null,
-    };
+        lastStreams: {
+            type: Map,
+            of: String,
+        },
+        announcementChannel: String,
+    },
+    levelsystem: {
+        enabled: Boolean,
+        announcementChannel: String,
+        color: String,
+        levelImage: Buffer,
+    },
+    birthdays: {
+        enabled: Boolean,
+        birthdays: { type: Map, of: [Number] },
+        announcementChannel: String,
+    },
+});
 
-    levelsystem: LevelsystemConfig = {
-        enabled: true,
-        announcementChannel: null,
-        color: "ffffff",
-    };
+export async function loadConfig(id: string): Promise<Config> {
+    const configModel = mongoose.model("Config", configSchema);
 
-    birthdays: BirthdayConfig = {
-        enabled: true,
-        birthdays: new Map<string, BirthDate>(),
-        announcementChannel: null,
-    };
-
-    constructor(id: string) {
-        this.id = id;
+    let res = await configModel.findOne({ id });
+    if (!res) {
+        const newConfig = {
+            id: id,
+            reactionMessages: {
+                enabled: true,
+                messages: [],
+            },
+            customCommands: {
+                enabled: true,
+            },
+            twitch: {
+                enabled: true,
+                streamers: [],
+                liveMessages: [],
+                streamersLive: [],
+                lastStreams: new Map<string, number>(),
+                announcementChannel: null,
+            },
+            levelsystem: {
+                enabled: true,
+                announcementChannel: null,
+                color: "ffffff",
+                levelImage: null,
+            },
+            birthdays: {
+                enabled: true,
+                birthdays: new Map<string, BirthDate>(),
+                announcementChannel: null,
+            },
+        } as unknown as Config;
+        res = await configModel.create(newConfig);
     }
 
-    save() {
-        mkdirSync(PATHS.guild_folder(this.id), { recursive: true });
-        writeFileSync(`${PATHS.guild_folder(this.id || "")}/config.json`, JSON.stringify(this, null, 4));
-    }
+    return res as Config;
+}
 
-    static load(id: string): GuildConfig {
-        try {
-            let loaded = JSON.parse(readFileSync(`${PATHS.guild_folder(id || "")}/config.json`).toString());
-            return Object.assign(new GuildConfig(id), loaded);
-        } catch {
-            return new GuildConfig(id);
-        }
-    }
+export interface Config extends mongoose.Document {
+    id: string;
+    reactionMessages: ReactionMessageConfig;
+    customCommands: CustomCommandsConfig;
+    twitch: TwitchConfig;
+    levelsystem: LevelsystemConfig;
+    birthdays: BirthdayConfig;
 }
 
 export interface ModuleConfig {
@@ -66,7 +96,6 @@ export interface TwitchConfig extends AnnouncementConfig {
     liveMessages: string[];
     streamersLive: string[];
     lastStreams: Map<string, number>;
-    announcementChannel: string | null;
 }
 
 export interface CustomCommandsConfig extends ModuleConfig {}
@@ -77,16 +106,14 @@ export interface ReactionMessageConfig extends ModuleConfig {
 
 export interface LevelsystemConfig extends AnnouncementConfig {
     color: string;
+    levelImage: Buffer | null;
 }
 
 export interface BirthdayConfig extends AnnouncementConfig {
     birthdays: Map<string, BirthDate>;
 }
 
-export type BirthDate = {
-    day: number;
-    month: number;
-};
+export type BirthDate = number[];
 
 export type ReactionMessage = {
     message: Message;

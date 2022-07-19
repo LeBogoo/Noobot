@@ -2,7 +2,8 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v10";
 import { Client } from "discord.js";
 import { mkdirSync, readdirSync, readFileSync } from "fs";
-import { GuildConfig } from "../Config";
+import mongoose from "mongoose";
+import { loadConfig } from "../Config";
 import { PATHS } from "../helper";
 import { JsonCommand } from "../types";
 const { REST } = require("@discordjs/rest");
@@ -15,6 +16,17 @@ function readCommandFile(path): JsonCommand {
 export default async function (client: Client) {
     console.log(`${client.user?.username} is ready!`);
     client.user?.setActivity(`${client.guilds.cache.size} servers!`, { type: "WATCHING" });
+
+    await mongoose.connect(
+        `mongodb://localhost:27017/${client.user?.username || "unknownClient"}`,
+        {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        },
+        () => {
+            console.log("Connected to database!");
+        }
+    );
 
     const commands: RESTPostAPIApplicationCommandsJSONBody[] = [];
 
@@ -45,16 +57,13 @@ export default async function (client: Client) {
      * Register all commands to each guild
      */
     const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
-    client.guilds.cache.forEach((guild) => {
+    client.guilds.cache.forEach(async (guild) => {
         /**
          * Create directories for guild if they don't exist.
          */
 
         const customCommandPath = `${PATHS.guild_folder(guild.id)}/customCommands`;
         mkdirSync(customCommandPath, { recursive: true });
-
-        // Create config if it doesn't exist
-        GuildConfig.load(guild.id).save();
 
         /**
          * Add custom commands

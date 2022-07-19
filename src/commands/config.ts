@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import { createWriteStream, unlinkSync } from "fs";
 import fetch from "node-fetch";
-import { GuildConfig } from "../Config";
+import { loadConfig } from "../Config";
 import { PATHS } from "../helper";
 import { BotCommand } from "../types";
 const gm = require("gm").subClass({ imageMagick: true });
@@ -21,14 +21,16 @@ async function downloadFile(url: string, path: string) {
 
 async function levelsystemGroupHandler(interaction: CommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
-    const config = GuildConfig.load(interaction.guild!.id);
+    const guildConfig = await loadConfig(interaction.guild!.id);
 
     switch (subcommand) {
         case "color": {
             const hexcode = interaction.options.getString("hexcode")?.toLocaleLowerCase() || "ffffff";
             const match = hexcode.match(/[0-f]{6}/);
             if (match) {
-                config.levelsystem.color = match[0];
+                guildConfig.levelsystem.color = match[0];
+                guildConfig.save();
+
                 interaction.reply(`Set levelsystem color to \`#${match[0]}\`.`);
             } else
                 interaction.reply(
@@ -51,7 +53,8 @@ async function levelsystemGroupHandler(interaction: CommandInteraction) {
                     }
                     gm(tempfilePath)
                         .resizeExact(720, 200)
-                        .write(`${PATHS.guild_folder(interaction.guild?.id)}/LevelBackdrop.png`, (err) => {
+
+                        .toBuffer("PNG", function (err: Error, buffer: Buffer) {
                             if (err)
                                 return interaction.editReply(
                                     `There was an error while processing your image.\n\`\`\`json\n${JSON.stringify(
@@ -61,9 +64,12 @@ async function levelsystemGroupHandler(interaction: CommandInteraction) {
                                     )}\n\`\`\``
                                 );
                             unlinkSync(tempfilePath);
-                        });
 
-                    interaction.editReply(`Saved image!`);
+                            guildConfig.levelsystem.levelImage = buffer;
+                            guildConfig.save();
+
+                            interaction.editReply(`Saved image!`);
+                        });
                 });
                 break;
             } else interaction.reply("Please attach an image.");
@@ -72,16 +78,17 @@ async function levelsystemGroupHandler(interaction: CommandInteraction) {
 
         case "enable": {
             const enable = interaction.options.getBoolean("enable");
-            config.levelsystem.enabled = enable === null ? true : enable;
-            interaction.reply(`${config.levelsystem.enabled ? "Enabled" : "Disabled"} levelsystem.`);
+            guildConfig.levelsystem.enabled = enable === null ? true : enable;
+            guildConfig.save();
+
+            interaction.reply(`${guildConfig.levelsystem.enabled ? "Enabled" : "Disabled"} levelsystem.`);
+
             /**
              * @todo remove levelsystem commands if disabled, add them if enabled
              */
             break;
         }
     }
-
-    config.save();
 }
 
 export default {

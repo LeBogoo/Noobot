@@ -19,10 +19,12 @@
         "discord.js": "^13.8.1",
         "dotenv": "^16.0.1",
         "gm": "^1.23.1",
+        "mongoose": "5.10.4",
         "runes": "^0.4.3"
     },
     "devDependencies": {
         "@types/gm": "^1.18.12",
+        "@types/mongoose": "5.10.5",
         "@types/runes": "^0.4.1",
         "prettier": "^2.7.1"
     }

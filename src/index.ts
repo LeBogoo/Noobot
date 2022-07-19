@@ -1,6 +1,7 @@
 import { Client, Intents } from "discord.js";
 import * as dotenv from "dotenv";
 import { mkdirSync, readdirSync } from "fs";
+import mongoose from "mongoose";
 import { PATHS } from "./helper";
 dotenv.config();
 

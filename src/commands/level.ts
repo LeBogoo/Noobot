@@ -1,22 +1,25 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { createCanvas, loadImage, registerFont } from "canvas";
 import { CommandInteraction, Guild, MessageAttachment, MessageEmbed, User } from "discord.js";
-import { GuildConfig } from "../Config";
+import { loadConfig } from "../Config";
+import runes from "runes";
 import { roundRect } from "../helper";
 import { LevelStorage, LevelUser } from "../LevelStorage";
 import { BotCommand } from "../types";
-import runes from "runes";
 async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<MessageAttachment> {
-    const config = GuildConfig.load(guild.id);
+    const guildConfig = await loadConfig(guild.id);
     const barWidth = 520;
     const barThickness = 26;
     const pfp = await loadImage(levelUser.pictureURL.replace("webp", "png"));
     const canvas = createCanvas(720, 200);
     const ctx = canvas.getContext("2d");
-    let background;
-    try {
-        background = await loadImage(`./data/${guild.id}/LevelBackdrop.png`);
-    } catch (_) {}
+
+    // Load background image. If there is an image in the config, read it, otherwise read default image.
+    const background = await loadImage(
+        guildConfig.levelsystem.levelImage
+            ? guildConfig.levelsystem.levelImage
+            : "./src/assets/default/LevelBackdrop.png"
+    );
 
     registerFont("./src/assets/RobotoCondensed-Light.ttf", { family: "RobotoCondensed-Light" });
 
@@ -33,8 +36,8 @@ async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<M
     ctx.restore();
 
     // Set styles for texts and fills
-    ctx.strokeStyle = `#${config.levelsystem.color}`;
-    ctx.fillStyle = `#${config.levelsystem.color}`;
+    ctx.strokeStyle = `#${guildConfig.levelsystem.color}`;
+    ctx.fillStyle = `#${guildConfig.levelsystem.color}`;
 
     // Background border
     ctx.lineWidth = 5;
@@ -67,11 +70,11 @@ async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<M
     ctx.font = '25px "RobotoCondensed-Light"';
     ctx.fillText(`${Math.max(0, levelUser.relativeXp)} / ${levelUser.relativeNextLevelXp} XP`, 360, 140);
 
-    ctx.fillStyle = `#${config.levelsystem.color}33`; // make this transparent
+    ctx.fillStyle = `#${guildConfig.levelsystem.color}33`; // make this transparent
     roundRect(ctx, 172, 148, barWidth, barThickness, barThickness / 2, true, false);
 
     // draw roundRect again with percentage as width
-    ctx.fillStyle = `#${config.levelsystem.color}`;
+    ctx.fillStyle = `#${guildConfig.levelsystem.color}`;
     roundRect(
         ctx,
         172,
