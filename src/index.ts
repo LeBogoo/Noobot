@@ -1,19 +1,11 @@
 import { Client, Intents } from "discord.js";
 import * as dotenv from "dotenv";
-import { mkdirSync, readdirSync } from "fs";
-import mongoose from "mongoose";
-import { PATHS } from "./helper";
+import { readdirSync } from "fs";
 dotenv.config();
 
 const client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
 });
-
-/**
- * Create initial folder structure
- */
-mkdirSync(PATHS.FEEDBACK_DONE, { recursive: true });
-mkdirSync(PATHS.FEEDBACK_PENDING, { recursive: true });
 
 /**
  * Register all events listed in 'src/events' dir.

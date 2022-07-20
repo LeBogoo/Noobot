@@ -1,5 +1,6 @@
 import { Emoji, Message, Role } from "discord.js";
 import mongoose from "mongoose";
+import { JsonCommand } from "./handlers/commandHandler";
 
 const configSchema = new mongoose.Schema<Config>({
     id: String,
@@ -9,6 +10,17 @@ const configSchema = new mongoose.Schema<Config>({
     },
     customCommands: {
         enabled: Boolean,
+        commands: {
+            type: Map,
+            of: {
+                commandJSON: {
+                    options: [],
+                    name: String,
+                    description: String,
+                },
+                response: String,
+            },
+        },
     },
     twitch: {
         enabled: Boolean,
@@ -53,6 +65,7 @@ export async function loadConfig(id: string): Promise<Config> {
             },
             customCommands: {
                 enabled: true,
+                commands: new Map<string, JsonCommand>(),
             },
             twitch: {
                 enabled: true,
@@ -107,7 +120,9 @@ export interface TwitchConfig extends AnnouncementConfig {
     lastStreams: Map<string, number>;
 }
 
-export interface CustomCommandsConfig extends ModuleConfig {}
+export interface CustomCommandsConfig extends ModuleConfig {
+    commands: Map<string, JsonCommand>;
+}
 
 export interface ReactionMessageConfig extends ModuleConfig {
     messages: ReactionMessage[];

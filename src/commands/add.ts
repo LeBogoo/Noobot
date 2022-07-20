@@ -1,8 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
-import { writeFileSync } from "fs";
-import { isCommand, isCustomCommand, PATHS } from "../helper";
-import { BotCommand, JsonCommand } from "../types";
+import { loadConfig } from "../Config";
+import { BotCommand, getCustomCommand, isCommand, JsonCommand } from "../handlers/commandHandler";
 const { REST } = require("@discordjs/rest");
 const { Routes, PermissionFlagsBits } = require("discord-api-types/v10");
 
@@ -24,13 +23,14 @@ export default {
         .addStringOption((option) =>
             option.setName("response").setDescription("The response of the command.").setRequired(true)
         ),
-    run: function (interaction: CommandInteraction) {
+    run: async function (interaction: CommandInteraction) {
         const name = interaction.options.getString("name")?.toLocaleLowerCase() || "defaultname";
         const description = interaction.options.getString("description") || "Default Description";
         const response = interaction.options.getString("response") || "Default Response";
+        const guildConfig = await loadConfig(interaction.guild!.id);
 
         if (isCommand(name)) return `You cannot overwrite the default commands.`;
-        if (isCustomCommand(name, interaction.guild)) return `Command \`${name}\` already exists!`;
+        if (getCustomCommand(guildConfig.customCommands, name)) return `Command \`${name}\` already exists!`;
 
         if (!name.match(/^([a-z0-9]{1,30})$/))
             return "Only a maximum of 30 lowercase Latin letters and numbers from 0 to 9 are allowed as name.";
@@ -49,10 +49,8 @@ export default {
             body: command.commandJSON,
         });
 
-        writeFileSync(
-            `${PATHS.guild_folder(interaction.guild?.id)}/customCommands/${name}.json`,
-            JSON.stringify(command)
-        );
+        guildConfig.customCommands.commands.set(name, command);
+        guildConfig.save();
         return `Command \`${name}\` added!`;
     },
-} as BotCommand;
+} as unknown as BotCommand;

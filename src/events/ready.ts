@@ -1,19 +1,14 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v10";
 import { Client } from "discord.js";
-import { mkdirSync, readdirSync, readFileSync } from "fs";
+import dotenv from "dotenv";
+import { readdirSync } from "fs";
 import mongoose from "mongoose";
 import { loadConfig } from "../Config";
 import { PATHS } from "../helper";
-import { JsonCommand } from "../types";
-import dotenv from "dotenv";
 dotenv.config();
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v10");
-
-function readCommandFile(path): JsonCommand {
-    return JSON.parse(readFileSync(path).toString());
-}
 
 export default async function (client: Client) {
     console.log(`${client.user?.username} is ready!`);
@@ -63,12 +58,6 @@ export default async function (client: Client) {
     const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
     client.guilds.cache.forEach(async (guild) => {
         /**
-         * Create directories for guild if they don't exist.
-         */
-        const customCommandPath = `${PATHS.guild_folder(guild.id)}/customCommands`;
-        mkdirSync(customCommandPath, { recursive: true });
-
-        /**
          * Create default  configs if they don't exist.
          */
         const guildConfig = await loadConfig(guild.id);
@@ -77,12 +66,10 @@ export default async function (client: Client) {
         /**
          * Add custom commands
          */
-        const customCommandsList = readdirSync(customCommandPath);
-        const customCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
-        for (let i = 0; i < customCommandsList.length; i++) {
-            const customCommand = readCommandFile(`${customCommandPath}/${customCommandsList[i]}`);
-            customCommands.push(customCommand.commandJSON);
-        }
+
+        const customCommands: RESTPostAPIApplicationCommandsJSONBody[] = Array.from(
+            guildConfig.customCommands.commands
+        ).map((e) => e[1].commandJSON);
 
         rest.put(Routes.applicationGuildCommands(client.application?.id, guild.id), {
             body: [...commands, ...customCommands],
