@@ -1,11 +1,11 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { createCanvas, loadImage, registerFont } from "canvas";
 import { CommandInteraction, Guild, MessageAttachment, MessageEmbed, User } from "discord.js";
-import { LevelsystemConfig, loadConfig } from "../Config";
 import runes from "runes";
+import { LevelsystemConfig, loadConfig } from "../Config";
+import { BotCommand } from "../handlers/commandHandler";
 import { roundRect } from "../helper";
 import { LevelStorage, LevelUser } from "../LevelStorage";
-import { BotCommand } from "../types";
 async function generateLevelImage(
     levelSystemConfig: LevelsystemConfig,
     levelUser: LevelUser,
