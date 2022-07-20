@@ -16,7 +16,7 @@ interface Feedback {
         hash: number;
         id: string;
     };
-    date: Date;
+    date: string;
 }
 
 const feedbackSchema = new mongoose.Schema<Feedback>({
@@ -28,7 +28,7 @@ const feedbackSchema = new mongoose.Schema<Feedback>({
         hash: Number,
         id: String,
     },
-    date: Date,
+    date: String,
 });
 
 const feedbackModel = mongoose.model("Feedback", feedbackSchema);
@@ -91,7 +91,7 @@ export default {
                 hash: interaction.user.discriminator,
                 id: interaction.user.id,
             },
-            date: interaction.createdAt,
+            date: new Date().toString(),
         });
         feedback.save();
 
