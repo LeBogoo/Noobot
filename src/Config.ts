@@ -26,6 +26,12 @@ const configSchema = new mongoose.Schema<Config>({
         announcementChannel: String,
         color: String,
         levelImage: Buffer,
+        points: {
+            type: Map,
+            of: Number,
+        },
+        defaultOffset: Number,
+        multiplier: Number,
     },
     birthdays: {
         enabled: Boolean,
@@ -61,6 +67,9 @@ export async function loadConfig(id: string): Promise<Config> {
                 announcementChannel: null,
                 color: "ffffff",
                 levelImage: null,
+                points: new Map<string, number>(),
+                defaultOffset: 10,
+                multiplier: 50,
             },
             birthdays: {
                 enabled: true,
@@ -107,6 +116,9 @@ export interface ReactionMessageConfig extends ModuleConfig {
 export interface LevelsystemConfig extends AnnouncementConfig {
     color: string;
     levelImage: Buffer | null;
+    points: Map<string, number>;
+    defaultOffset: number;
+    multiplier: number;
 }
 
 export interface BirthdayConfig extends AnnouncementConfig {

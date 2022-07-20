@@ -1,13 +1,16 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { createCanvas, loadImage, registerFont } from "canvas";
 import { CommandInteraction, Guild, MessageAttachment, MessageEmbed, User } from "discord.js";
-import { loadConfig } from "../Config";
+import { LevelsystemConfig, loadConfig } from "../Config";
 import runes from "runes";
 import { roundRect } from "../helper";
 import { LevelStorage, LevelUser } from "../LevelStorage";
 import { BotCommand } from "../types";
-async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<MessageAttachment> {
-    const guildConfig = await loadConfig(guild.id);
+async function generateLevelImage(
+    levelSystemConfig: LevelsystemConfig,
+    levelUser: LevelUser,
+    guild: Guild
+): Promise<MessageAttachment> {
     const barWidth = 520;
     const barThickness = 26;
     const pfp = await loadImage(levelUser.pictureURL.replace("webp", "png"));
@@ -16,9 +19,7 @@ async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<M
 
     // Load background image. If there is an image in the config, read it, otherwise read default image.
     const background = await loadImage(
-        guildConfig.levelsystem.levelImage
-            ? guildConfig.levelsystem.levelImage
-            : "./src/assets/default/LevelBackdrop.png"
+        levelSystemConfig.levelImage ? levelSystemConfig.levelImage : "./src/assets/default/LevelBackdrop.png"
     );
 
     registerFont("./src/assets/RobotoCondensed-Light.ttf", { family: "RobotoCondensed-Light" });
@@ -36,8 +37,8 @@ async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<M
     ctx.restore();
 
     // Set styles for texts and fills
-    ctx.strokeStyle = `#${guildConfig.levelsystem.color}`;
-    ctx.fillStyle = `#${guildConfig.levelsystem.color}`;
+    ctx.strokeStyle = `#${levelSystemConfig.color}`;
+    ctx.fillStyle = `#${levelSystemConfig.color}`;
 
     // Background border
     ctx.lineWidth = 5;
@@ -70,11 +71,11 @@ async function generateLevelImage(levelUser: LevelUser, guild: Guild): Promise<M
     ctx.font = '25px "RobotoCondensed-Light"';
     ctx.fillText(`${Math.max(0, levelUser.relativeXp)} / ${levelUser.relativeNextLevelXp} XP`, 360, 140);
 
-    ctx.fillStyle = `#${guildConfig.levelsystem.color}33`; // make this transparent
+    ctx.fillStyle = `#${levelSystemConfig.color}33`; // make this transparent
     roundRect(ctx, 172, 148, barWidth, barThickness, barThickness / 2, true, false);
 
     // draw roundRect again with percentage as width
-    ctx.fillStyle = `#${guildConfig.levelsystem.color}`;
+    ctx.fillStyle = `#${levelSystemConfig.color}`;
     roundRect(
         ctx,
         172,
@@ -135,8 +136,9 @@ export default {
             ? interaction.options.getUser("user")
             : interaction.member!.user;
 
-        const storage: LevelStorage = LevelStorage.load(interaction.guild!.id);
-        const levelUser = storage.getLevelUser(selectedUser as User);
+        const guildConfig = await loadConfig(interaction.guild!.id);
+
+        const levelUser = LevelStorage.getLevelUser(guildConfig.levelsystem, selectedUser as User);
 
         if (useText) {
             // Generate text version and send it
@@ -152,7 +154,7 @@ export default {
 
         // Generate image and send it
         return {
-            files: [await generateLevelImage(levelUser, interaction.guild as Guild)],
+            files: [await generateLevelImage(guildConfig.levelsystem, levelUser, interaction.guild as Guild)],
         };
     },
 } as unknown as BotCommand;

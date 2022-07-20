@@ -1,5 +1,6 @@
 import { Message } from "discord.js";
-import { LevelStorage, xpToLevel } from "../LevelStorage";
+import { loadConfig } from "../Config";
+import { LevelStorage } from "../LevelStorage";
 
 const cooldowns: { [key: string]: { [key: string]: number } } = {};
 
@@ -47,17 +48,24 @@ export default async function ({ author, channel, cleanContent, client, guild, m
     // Set new cooldown to current time
     cooldowns[guild.id][author.id] = now;
     // Increment xp system
-    const storage: LevelStorage = LevelStorage.load(guild.id);
-    const xpBefore = storage.getLevelUserXp(author);
-    const addedXp = calculateXp(cleanContent);
-    storage.addLevelUserXp(author, addedXp);
-    const xpAfter = storage.getLevelUserXp(author);
 
-    const oldLevel = xpToLevel(xpBefore, guild.id);
-    const newLevel = xpToLevel(xpAfter, guild.id);
+    const guildConfig = await loadConfig(guild.id);
+    let levelSystemConfig = guildConfig.levelsystem;
+
+    const xpBefore = LevelStorage.getLevelUserXp(levelSystemConfig, author);
+    const addedXp = calculateXp(cleanContent);
+    levelSystemConfig = LevelStorage.addLevelUserXp(levelSystemConfig, author, addedXp);
+    const xpAfter = LevelStorage.getLevelUserXp(levelSystemConfig, author);
+
+    const oldLevel = LevelStorage.xpToLevel(levelSystemConfig, xpBefore);
+    const newLevel = LevelStorage.xpToLevel(levelSystemConfig, xpAfter);
 
     if (oldLevel != newLevel)
         channel.send(`Congrats <@${author.id}>! You've just reached level ${newLevel}! :partying_face: :tada:`);
 
-    storage.save();
+    guildConfig.levelsystem = levelSystemConfig;
+    console.log(guildConfig.levelsystem);
+
+    await guildConfig.save();
+    console.log("saved!");
 }
