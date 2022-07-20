@@ -63,6 +63,19 @@ export default async function (client: Client) {
         const guildConfig = await loadConfig(guild.id);
         guildConfig.save();
 
+        const memberCount = guildConfig.memberCount;
+        if (memberCount.enabled) {
+            const countChannel = guild.channels.cache.find((channel) =>
+                channel.name.startsWith(memberCount.channelName)
+            );
+            if (!countChannel)
+                return guild.channels.create(memberCount.channelName + guild.memberCount, {
+                    type: "GUILD_CATEGORY",
+                    position: 0,
+                });
+            countChannel.setName(memberCount.channelName + guild.memberCount);
+        }
+
         /**
          * Add custom commands
          */

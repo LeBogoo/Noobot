@@ -18,6 +18,45 @@ async function downloadFile(url: string, path: string) {
     });
 }
 
+async function membercountGroupHandler(interaction: CommandInteraction) {
+    const subcommand = interaction.options.getSubcommand();
+    const guildConfig = await loadConfig(interaction.guild!.id);
+
+    switch (subcommand) {
+        case "enable": {
+            const enable = interaction.options.getBoolean("enable");
+            const isEnabled = guildConfig.memberCount.enabled;
+            guildConfig.memberCount.enabled = enable === null ? true : enable;
+            guildConfig.save();
+
+            interaction.reply(`${guildConfig.memberCount.enabled ? "Enabled" : "Disabled"} membercount.`);
+
+            if (isEnabled != guildConfig.memberCount.enabled) {
+                if (guildConfig.memberCount.enabled) {
+                    const countChannel = interaction.guild!.channels.cache.find((channel) =>
+                        channel.name.startsWith(guildConfig.memberCount.channelName)
+                    );
+                    if (!countChannel)
+                        return interaction.guild!.channels.create(
+                            guildConfig.memberCount.channelName + interaction.guild!.memberCount,
+                            {
+                                type: "GUILD_CATEGORY",
+                                position: 0,
+                            }
+                        );
+                    countChannel.setName(guildConfig.memberCount.channelName + interaction.guild!.memberCount);
+                } else {
+                    const countChannel = interaction.guild!.channels.cache.find((channel) =>
+                        channel.name.startsWith(guildConfig.memberCount.channelName)
+                    );
+                    if (countChannel) countChannel.delete();
+                }
+            }
+            break;
+        }
+    }
+}
+
 async function levelsystemGroupHandler(interaction: CommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
     const guildConfig = await loadConfig(interaction.guild!.id);
@@ -128,6 +167,19 @@ export default {
                                 .setRequired(true)
                         )
                 )
+        )
+        .addSubcommandGroup((group) =>
+            group
+                .setName("membercount")
+                .setDescription("Configure settings about the membercount feature")
+                .addSubcommand((subcommand) =>
+                    subcommand
+                        .setName("enable")
+                        .setDescription("Enables/Disables the levelsystem")
+                        .addBooleanOption((option) =>
+                            option.setName("enable").setDescription("Should this module be enabled?").setRequired(true)
+                        )
+                )
         ),
     run: function (interaction: CommandInteraction) {
         const commandGroup = interaction.options.getSubcommandGroup();
@@ -136,7 +188,9 @@ export default {
             case "levelsystem":
                 levelsystemGroupHandler(interaction);
                 break;
-
+            case "membercount":
+                membercountGroupHandler(interaction);
+                break;
             default:
                 return `Unsupported configuration option.`;
         }

@@ -22,6 +22,10 @@ const configSchema = new mongoose.Schema<Config>({
             },
         },
     },
+    memberCount: {
+        enabled: Boolean,
+        channelName: String,
+    },
     twitch: {
         enabled: Boolean,
         streamers: [],
@@ -67,6 +71,10 @@ export async function loadConfig(id: string): Promise<Config> {
                 enabled: true,
                 commands: new Map<string, JsonCommand>(),
             },
+            memberCount: {
+                enabled: true,
+                channelName: "👥 Members: ",
+            },
             twitch: {
                 enabled: true,
                 streamers: [],
@@ -100,6 +108,7 @@ export interface Config extends mongoose.Document {
     id: string;
     reactionMessages: ReactionMessageConfig;
     customCommands: CustomCommandsConfig;
+    memberCount: MemberCountConfig;
     twitch: TwitchConfig;
     levelsystem: LevelsystemConfig;
     birthdays: BirthdayConfig;
@@ -122,6 +131,10 @@ export interface TwitchConfig extends AnnouncementConfig {
 
 export interface CustomCommandsConfig extends ModuleConfig {
     commands: Map<string, JsonCommand>;
+}
+
+export interface MemberCountConfig extends ModuleConfig {
+    channelName: string;
 }
 
 export interface ReactionMessageConfig extends ModuleConfig {
