@@ -21,7 +21,7 @@ export default async function (client: Client) {
 
     await mongoose.connect(
         // Look at .env_examle for a template!
-        `${process.env.DB_URL || "mongodb://localhost:27017"}${client.user?.username || "unknownClient"}`,
+        `mongodb://${process.env.DB_ADDRESS || "localhost"}:${process.env.DB_PORT || "27017"}/${client.user!.username}`,
         {
             useNewUrlParser: true,
             useUnifiedTopology: true,
