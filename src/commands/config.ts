@@ -42,7 +42,7 @@ async function levelsystemGroupHandler(interaction: CommandInteraction) {
         case "levelimage": {
             const levelImageAttachment = interaction.options.getAttachment("image");
             if (levelImageAttachment) {
-                const tempfilePath = `${PATHS.guild_folder(interaction.guild?.id)}/tempLevelImageFile`;
+                const tempfilePath = `./tempLevelImageFile${interaction.guild!.id}`;
                 interaction.deferReply();
                 await downloadFile(levelImageAttachment.url, tempfilePath);
 
