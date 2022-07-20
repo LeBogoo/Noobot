@@ -29,6 +29,7 @@ $ ts-node src/index.ts
 -   Ranklist
 -   Polls
 -   Configurable modules (on/off (Commands))
+-   Welcome images
 -   Bdays
 -   Quotes
 -   YouTube
