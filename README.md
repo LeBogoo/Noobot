@@ -18,10 +18,10 @@ $ ts-node src/index.ts
 
 ## Todos
 
--   Database
 -   Ranklist
 -   Polls
 -   Configurable modules (on/off (Commands))
+-   Join role
 -   Member Count
 -   Bdays
 -   Quotes
