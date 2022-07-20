@@ -64,8 +64,6 @@ export default async function ({ author, channel, cleanContent, client, guild, m
         channel.send(`Congrats <@${author.id}>! You've just reached level ${newLevel}! :partying_face: :tada:`);
 
     guildConfig.levelsystem = levelSystemConfig;
-    console.log(guildConfig.levelsystem);
 
     await guildConfig.save();
-    console.log("saved!");
 }
