@@ -4,7 +4,6 @@ import { createWriteStream, unlinkSync } from "fs";
 import fetch from "node-fetch";
 import { loadConfig } from "../Config";
 import { BotCommand } from "../handlers/commandHandler";
-import { PATHS } from "../helper";
 const gm = require("gm").subClass({ imageMagick: true });
 
 const { PermissionFlagsBits } = require("discord-api-types/v10");

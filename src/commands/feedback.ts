@@ -1,10 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, Message, MessageEmbed } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 import dotenv from "dotenv";
-import { writeFileSync } from "fs";
-import { BotCommand } from "../handlers/commandHandler";
-import { PATHS } from "../helper";
 import mongoose from "mongoose";
+import { BotCommand } from "../handlers/commandHandler";
 dotenv.config();
 
 interface Feedback {
