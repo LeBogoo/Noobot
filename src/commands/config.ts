@@ -57,6 +57,30 @@ async function membercountGroupHandler(interaction: CommandInteraction) {
     }
 }
 
+async function joinroleGroupHandler(interaction: CommandInteraction) {
+    const subcommand = interaction.options.getSubcommand();
+    const guildConfig = await loadConfig(interaction.guild!.id);
+
+    switch (subcommand) {
+        case "enable": {
+            const enable = interaction.options.getBoolean("enable");
+            guildConfig.joinRole.enabled = enable === null ? true : enable;
+            guildConfig.save();
+
+            interaction.reply(`${guildConfig.joinRole.enabled ? "Enabled" : "Disabled"} joinrole.`);
+            break;
+        }
+        case "role": {
+            const role = interaction.options.getRole("role", true);
+            guildConfig.joinRole.roleId = role.id;
+            guildConfig.save();
+
+            interaction.reply(`Set joinrole to <@&${role.id}>.`);
+            break;
+        }
+    }
+}
+
 async function levelsystemGroupHandler(interaction: CommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
     const guildConfig = await loadConfig(interaction.guild!.id);
@@ -137,7 +161,7 @@ export default {
         .addSubcommandGroup((group) =>
             group
                 .setName("levelsystem")
-                .setDescription("Configure settings about the level system")
+                .setDescription("Configure settings about the levelsystem module")
                 .addSubcommand((subcommand) =>
                     subcommand
                         .setName("enable")
@@ -171,7 +195,7 @@ export default {
         .addSubcommandGroup((group) =>
             group
                 .setName("membercount")
-                .setDescription("Configure settings about the membercount feature")
+                .setDescription("Configure settings about the membercount module")
                 .addSubcommand((subcommand) =>
                     subcommand
                         .setName("enable")
@@ -179,6 +203,25 @@ export default {
                         .addBooleanOption((option) =>
                             option.setName("enable").setDescription("Should this module be enabled?").setRequired(true)
                         )
+                )
+        )
+        .addSubcommandGroup((group) =>
+            group
+                .setName("joinrole")
+                .setDescription("Configure settings about the joinrole module")
+                .addSubcommand((subcommand) =>
+                    subcommand
+                        .setName("enable")
+                        .setDescription("Enables/Disables the joinrole module.")
+                        .addBooleanOption((option) =>
+                            option.setName("enable").setDescription("Should this module be enabled?").setRequired(true)
+                        )
+                )
+                .addSubcommand((subcommand) =>
+                    subcommand
+                        .setName("role")
+                        .setDescription("Set the role that should be assigned to new members when they join.")
+                        .addRoleOption((option) => option.setName("role").setDescription("Role").setRequired(true))
                 )
         ),
     run: function (interaction: CommandInteraction) {
@@ -191,6 +234,10 @@ export default {
             case "membercount":
                 membercountGroupHandler(interaction);
                 break;
+            case "joinrole":
+                joinroleGroupHandler(interaction);
+                break;
+
             default:
                 return `Unsupported configuration option.`;
         }

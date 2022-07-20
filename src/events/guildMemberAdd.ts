@@ -5,6 +5,12 @@ export default async function (client: Client, member: GuildMember) {
     const guild = member.guild;
     const guildConfig = await loadConfig(guild.id);
     const memberCount = guildConfig.memberCount;
+    const joinRole = guildConfig.joinRole;
+
+    if (joinRole.enabled) {
+        const role = guild.roles.cache.find((guildRole) => guildRole.id == joinRole.roleId);
+        if (role) member.roles.add(role);
+    }
     if (memberCount.enabled) {
         const countChannel = guild.channels.cache.find((channel) => channel.name.startsWith(memberCount.channelName));
         if (!countChannel)

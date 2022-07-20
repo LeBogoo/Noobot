@@ -29,8 +29,6 @@ $ ts-node src/index.ts
 -   Ranklist
 -   Polls
 -   Configurable modules (on/off (Commands))
--   Join role
--   Member Count
 -   Bdays
 -   Quotes
 -   YouTube
