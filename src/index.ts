@@ -16,7 +16,7 @@ const client = new Client({
 /**
  * Register all events listed in 'src/events' dir.
  */
-readdirSync("./src/events").forEach(async (file) => {
+readdirSync("./events").forEach(async (file) => {
     const event = (await import("./events/" + file)).default;
     const eventName = file.split(".")[0];
     client.on(eventName, (...args: unknown[]) => event(client, ...args));

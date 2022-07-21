@@ -1,6 +1,6 @@
 export const PATHS = {
-    COMMANDS: "./src/commands",
-    CONTEXT_MENUS: "./src/contextMenus",
+    COMMANDS: "./commands",
+    CONTEXT_MENUS: "./contextMenus",
 };
 
 export const months = [

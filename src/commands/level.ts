@@ -19,10 +19,10 @@ async function generateLevelImage(
 
     // Load background image. If there is an image in the config, read it, otherwise read default image.
     const background = await loadImage(
-        levelSystemConfig.levelImage ? levelSystemConfig.levelImage : "./src/assets/default/LevelBackdrop.png"
+        levelSystemConfig.levelImage ? levelSystemConfig.levelImage : "./assets/default/LevelBackdrop.png"
     );
 
-    registerFont("./src/assets/RobotoCondensed-Light.ttf", { family: "RobotoCondensed-Light" });
+    registerFont("./assets/RobotoCondensed-Light.ttf", { family: "RobotoCondensed-Light" });
 
     // Background (masked)
     const padding = 3;

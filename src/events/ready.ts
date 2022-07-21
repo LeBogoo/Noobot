@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { readdirSync } from "fs";
 import mongoose from "mongoose";
 import { Config, loadConfig } from "../Config";
+import apiHandler from "../handlers/apiHandler";
 import bdayHandler from "../handlers/bdayHandler";
 import { PATHS } from "../helper";
 
@@ -82,6 +83,7 @@ export default async function (client: Client) {
     console.log(`${client.user?.username} is ready!`);
     cycleActiviy(client, 0);
     bdayHandler(client);
+    apiHandler(client);
 
     await mongoose.connect(
         // Look at .env_examle for a template!

@@ -6,7 +6,7 @@ import { Config } from "../Config";
 import { BotCommand } from "../handlers/commandHandler";
 dotenv.config();
 
-interface Feedback {
+export interface Feedback extends mongoose.Document {
     pending: boolean;
     title: string;
     description: string;
@@ -15,10 +15,11 @@ interface Feedback {
         hash: number;
         id: string;
     };
+    priority: number;
     date: string;
 }
 
-const feedbackSchema = new mongoose.Schema<Feedback>({
+export const feedbackSchema = new mongoose.Schema<Feedback>({
     pending: Boolean,
     title: String,
     description: String,
@@ -27,11 +28,17 @@ const feedbackSchema = new mongoose.Schema<Feedback>({
         hash: Number,
         id: String,
     },
-    priority: String,
+    priority: Number,
     date: String,
 });
 
-const feedbackModel = mongoose.model("Feedback", feedbackSchema);
+export const feedbackModel = mongoose.model("Feedback", feedbackSchema);
+
+const priorityMap = {
+    1: "(1) Low",
+    2: "(2) Medium",
+    3: "(3) High",
+};
 
 export default {
     builder: new SlashCommandBuilder()
@@ -46,14 +53,14 @@ export default {
                 .setDescription("Describe your problem/idea in a little more detail!")
                 .setRequired(true)
         )
-        .addStringOption((option) =>
+        .addIntegerOption((option) =>
             option
                 .setName("priority")
                 .setDescription("What do you think should be the priority of this request?")
                 .addChoices(
-                    { name: "(1) Low", value: "Low" },
-                    { name: "(2) Medium", value: "Medium" },
-                    { name: "(3) High", value: "High" }
+                    { name: priorityMap[1], value: 1 },
+                    { name: priorityMap[2], value: 2 },
+                    { name: priorityMap[3], value: 3 }
                 )
                 .setRequired(true)
         ),
@@ -63,7 +70,7 @@ export default {
     run: async function (interaction: CommandInteraction) {
         const title = interaction.options.getString("title", true);
         const description = interaction.options.getString("description", true);
-        const priority = interaction.options.getString("priority", true);
+        const priority = interaction.options.getInteger("priority", true);
         const author = interaction.user.username + "#" + interaction.user.discriminator;
         const author_id = interaction.user.id;
 
@@ -78,7 +85,7 @@ export default {
             .setDescription("This is what we've recieved:")
             .addField("Title", slicedTitle)
             .addField("Description", slicedDescription)
-            .addField("Prioriy", priority)
+            .addField("Prioriy", priorityMap[priority])
             .addField("Author", author);
 
         // const filename = `${PATHS.FEEDBACK_PENDING}/${new Date().toDateString()} ${new Date().getTime()}.md`;
