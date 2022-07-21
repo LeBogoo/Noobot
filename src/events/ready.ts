@@ -10,10 +10,32 @@ dotenv.config();
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v10");
 
+async function getUserCount(client: Client): Promise<number> {
+    let users = new Set();
+
+    for (let [id, guild] of client.guilds.cache) {
+        const members = await guild.members.fetch();
+        members.forEach((member) => users.add(member.id));
+    }
+
+    return users.size;
+}
+
+async function cycleActiviy(client: Client, index: number) {
+    const activities = [`${client.guilds.cache.size} servers!`, `${await getUserCount(client)} users!`];
+
+    const activityMessage = activities[index];
+    client.user?.setActivity(activityMessage, { type: "WATCHING" });
+    index++;
+    if (index == activities.length) index = 0;
+    setTimeout(() => {
+        cycleActiviy(client, index);
+    }, 10000);
+}
+
 export default async function (client: Client) {
     console.log(`${client.user?.username} is ready!`);
-    client.user?.setActivity(`${client.guilds.cache.size} servers!`, { type: "WATCHING" });
-
+    cycleActiviy(client, 0);
     await mongoose.connect(
         // Look at .env_examle for a template!
         `mongodb://${process.env.DB_ADDRESS || "localhost"}:${process.env.DB_PORT || "27017"}/${client.user!.username}`,
