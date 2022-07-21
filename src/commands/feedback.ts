@@ -27,6 +27,7 @@ const feedbackSchema = new mongoose.Schema<Feedback>({
         hash: Number,
         id: String,
     },
+    priority: String,
     date: String,
 });
 
@@ -87,6 +88,7 @@ export default {
             pending: true,
             title: title,
             description: description,
+            priority,
             author: {
                 name: interaction.user.username,
                 hash: interaction.user.discriminator,
