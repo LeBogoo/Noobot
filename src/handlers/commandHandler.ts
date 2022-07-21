@@ -9,7 +9,7 @@ import { Config, CustomCommandsConfig, loadConfig } from "../Config";
  * @returns If this default command exists
  */
 export function isCommand(name: string): boolean {
-    const commands = readdirSync("./commands");
+    const commands = readdirSync("./src/commands");
     return commands.includes(`${name}.ts`);
 }
 

@@ -1,0 +1,11 @@
+<div class="col-sm-6 mt-4">
+    <div class="card text-bg-<%=feedback.style%> feedback">
+        <h5 class="card-header"><%=feedback.author%></h5>
+        <div class="card-body">
+            <h5 class="card-title"><%=feedback.title%></h5>
+            <p class="card-text"><%=feedback.description%></p>
+            <p class="card-text"><%=feedback.date%></p>
+            <button onclick="closeFeedback('<%=feedback.id%>')" class="btn btn-primary">Close</button>
+        </div>
+    </div>
+</div>
