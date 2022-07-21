@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v10";
 import { CommandInteraction } from "discord.js";
 import { readdirSync } from "fs";
-import { CustomCommandsConfig, loadConfig } from "../Config";
+import { Config, CustomCommandsConfig, loadConfig } from "../Config";
 
 /**
  * @param name Command name
@@ -55,5 +55,6 @@ export type JsonCommand = {
 
 export type BotCommand = {
     builder: SlashCommandBuilder;
-    run: (interaction: CommandInteraction) => string;
+    check: (guildConfig: Config) => Promise<boolean>;
+    run: (interaction: CommandInteraction) => unknown;
 };

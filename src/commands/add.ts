@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
-import { loadConfig } from "../Config";
+import { Config, loadConfig } from "../Config";
 import { BotCommand, getCustomCommand, isCommand, JsonCommand } from "../handlers/commandHandler";
 const { REST } = require("@discordjs/rest");
 const { Routes, PermissionFlagsBits } = require("discord-api-types/v10");
@@ -23,6 +23,10 @@ export default {
         .addStringOption((option) =>
             option.setName("response").setDescription("The response of the command.").setRequired(true)
         ),
+
+    check: async function (guildConfig: Config) {
+        return guildConfig.customCommands.enabled;
+    },
     run: async function (interaction: CommandInteraction) {
         const name = interaction.options.getString("name")?.toLocaleLowerCase() || "defaultname";
         const description = interaction.options.getString("description") || "Default Description";
@@ -53,4 +57,4 @@ export default {
         guildConfig.save();
         return `Command \`${name}\` added!`;
     },
-} as unknown as BotCommand;
+} as BotCommand;

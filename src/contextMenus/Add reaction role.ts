@@ -10,6 +10,7 @@ import {
     ModalSubmitInteraction,
     TextInputComponent,
 } from "discord.js";
+import { Config } from "../Config";
 
 export default {
     builder: new ContextMenuCommandBuilder()
@@ -25,7 +26,9 @@ export default {
         interaction.reply("This feature is currently not working. Waiting for User/Role mention Selects.");
         // interaction.reply(`Emoji: ${emoji}, Role: NOT SUPPORTED`);
     },
-
+    check: async function (guildConfig: Config) {
+        return guildConfig.reactionMessages.enabled;
+    },
     run: function (interaction: MessageContextMenuInteraction) {
         const targetMessage = interaction.targetMessage as Message;
 

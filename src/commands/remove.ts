@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
-import { loadConfig } from "../Config";
+import { Config, loadConfig } from "../Config";
 import { BotCommand, getCustomCommand, isCommand } from "../handlers/commandHandler";
 const { REST } = require("@discordjs/rest");
 const { Routes, PermissionFlagsBits } = require("discord-api-types/v10");
@@ -14,7 +14,9 @@ export default {
         .addStringOption((option) =>
             option.setName("name").setDescription("The name of the command that should be removed.").setRequired(true)
         ),
-
+    check: async function (guildConfig: Config) {
+        return guildConfig.customCommands.enabled;
+    },
     run: async function (interaction: CommandInteraction) {
         const name = interaction.options.getString("name")?.toLocaleLowerCase() || "defaultname";
         const guildConfig = await loadConfig(interaction.guild!.id);

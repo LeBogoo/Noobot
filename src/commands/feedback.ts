@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed } from "discord.js";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import { Config } from "../Config";
 import { BotCommand } from "../handlers/commandHandler";
 dotenv.config();
 
@@ -55,7 +56,9 @@ export default {
                 )
                 .setRequired(true)
         ),
-
+    check: async function (_guildConfig: Config) {
+        return true;
+    },
     run: async function (interaction: CommandInteraction) {
         const title = interaction.options.getString("title", true);
         const description = interaction.options.getString("description", true);
@@ -105,4 +108,4 @@ export default {
 
         return { ephemeral: true, embeds: [embed] };
     },
-} as unknown as BotCommand;
+} as BotCommand;

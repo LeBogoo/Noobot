@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import { createWriteStream, unlinkSync } from "fs";
 import fetch from "node-fetch";
-import { loadConfig } from "../Config";
+import { Config, loadConfig } from "../Config";
 import { BotCommand } from "../handlers/commandHandler";
 const gm = require("gm").subClass({ imageMagick: true });
 
@@ -224,6 +224,9 @@ export default {
                         .addRoleOption((option) => option.setName("role").setDescription("Role").setRequired(true))
                 )
         ),
+    check: async function (_guildConfig: Config) {
+        return true;
+    },
     run: function (interaction: CommandInteraction) {
         const commandGroup = interaction.options.getSubcommandGroup();
 

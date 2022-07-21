@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { createCanvas, loadImage, registerFont } from "canvas";
 import { CommandInteraction, Guild, MessageAttachment, MessageEmbed, User } from "discord.js";
 import runes from "runes";
-import { LevelsystemConfig, loadConfig } from "../Config";
+import { Config, LevelsystemConfig, loadConfig } from "../Config";
 import { BotCommand } from "../handlers/commandHandler";
 import { roundRect } from "../helper";
 import { LevelStorage, LevelUser } from "../LevelStorage";
@@ -129,7 +129,9 @@ export default {
                 .setDescription("Set this to true if you only want to receive a text version.")
                 .setRequired(false)
         ),
-
+    check: async function (guildConfig: Config) {
+        return guildConfig.levelsystem.enabled;
+    },
     run: async function (interaction: CommandInteraction) {
         const useText = interaction.options.getBoolean("textversion") || false;
         const selectedUser = interaction.options.getUser("user")
