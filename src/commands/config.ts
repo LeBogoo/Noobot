@@ -29,7 +29,7 @@ async function membercountGroupHandler(interaction: CommandInteraction) {
             guildConfig.memberCount.enabled = enable === null ? true : enable;
             guildConfig.save();
 
-            interaction.reply(`${guildConfig.memberCount.enabled ? "Enabled" : "Disabled"} membercount.`);
+            interaction.reply(`${guildConfig.memberCount.enabled ? "Enabled" : "Disabled"} membercount module.`);
 
             if (isEnabled != guildConfig.memberCount.enabled) {
                 if (guildConfig.memberCount.enabled) {
@@ -67,7 +67,7 @@ async function joinroleGroupHandler(interaction: CommandInteraction) {
             guildConfig.joinRole.enabled = enable === null ? true : enable;
             guildConfig.save();
 
-            interaction.reply(`${guildConfig.joinRole.enabled ? "Enabled" : "Disabled"} joinrole.`);
+            interaction.reply(`${guildConfig.joinRole.enabled ? "Enabled" : "Disabled"} joinrole module.`);
             break;
         }
         case "role": {
@@ -76,6 +76,44 @@ async function joinroleGroupHandler(interaction: CommandInteraction) {
             guildConfig.save();
 
             interaction.reply(`Set joinrole to <@&${role.id}>.`);
+            break;
+        }
+    }
+}
+
+async function birthdaysGroupHandler(interaction: CommandInteraction) {
+    const subcommand = interaction.options.getSubcommand();
+    const guildConfig = await loadConfig(interaction.guild!.id);
+
+    switch (subcommand) {
+        case "enable": {
+            const enable = interaction.options.getBoolean("enable");
+            guildConfig.birthdays.enabled = enable === null ? true : enable;
+            guildConfig.save();
+
+            interaction.reply(`${guildConfig.birthdays.enabled ? "Enabled" : "Disabled"} birthday module.`);
+            break;
+        }
+
+        case "channel": {
+            const channel = interaction.options.getChannel("channel", true);
+            if (channel.type != "GUILD_TEXT") {
+                interaction.reply("Please select a text channel.");
+                return;
+            }
+            guildConfig.birthdays.announcementChannel = channel.id;
+            guildConfig.save();
+
+            interaction.reply(`Set birthday announcement channel to <#${guildConfig.birthdays.announcementChannel}>.`);
+            break;
+        }
+
+        case "role": {
+            const role = interaction.options.getRole("role", true);
+            guildConfig.birthdays.role = role.id;
+            guildConfig.save();
+
+            interaction.reply(`Set birthday role to <@&${role.id}>.`);
             break;
         }
     }
@@ -223,6 +261,36 @@ export default {
                         .setDescription("Set the role that should be assigned to new members when they join.")
                         .addRoleOption((option) => option.setName("role").setDescription("Role").setRequired(true))
                 )
+        )
+        .addSubcommandGroup((group) =>
+            group
+                .setName("birthdays")
+                .setDescription("Configure settings about the birthday module")
+                .addSubcommand((subcommand) =>
+                    subcommand
+                        .setName("enable")
+                        .setDescription("Enables/Disables the birthday module.")
+                        .addBooleanOption((option) =>
+                            option.setName("enable").setDescription("Should this module be enabled?").setRequired(true)
+                        )
+                )
+                .addSubcommand((subcommand) =>
+                    subcommand
+                        .setName("channel")
+                        .setDescription("Set the channel in which birthday notifications should be sent.")
+                        .addChannelOption((option) =>
+                            option
+                                .setName("channel")
+                                .setDescription("The channel in which birthday notifications should be sent.")
+                                .setRequired(true)
+                        )
+                )
+                .addSubcommand((subcommand) =>
+                    subcommand
+                        .setName("role")
+                        .setDescription("Set the role that should be assigned to members who have birthday.")
+                        .addRoleOption((option) => option.setName("role").setDescription("Role").setRequired(true))
+                )
         ),
     check: async function (_guildConfig: Config) {
         return true;
@@ -239,6 +307,9 @@ export default {
                 break;
             case "joinrole":
                 joinroleGroupHandler(interaction);
+                break;
+            case "birthdays":
+                birthdaysGroupHandler(interaction);
                 break;
 
             default:

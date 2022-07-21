@@ -5,8 +5,11 @@ import dotenv from "dotenv";
 import { readdirSync } from "fs";
 import mongoose from "mongoose";
 import { Config, loadConfig } from "../Config";
+import bdayHandler from "../handlers/bdayHandler";
 import { PATHS } from "../helper";
+
 dotenv.config();
+
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v10");
 
@@ -78,6 +81,8 @@ async function getCommands(guildConfig: Config) {
 export default async function (client: Client) {
     console.log(`${client.user?.username} is ready!`);
     cycleActiviy(client, 0);
+    bdayHandler(client);
+
     await mongoose.connect(
         // Look at .env_examle for a template!
         `mongodb://${process.env.DB_ADDRESS || "localhost"}:${process.env.DB_PORT || "27017"}/${client.user!.username}`,
