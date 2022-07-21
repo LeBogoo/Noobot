@@ -32,7 +32,12 @@ $ ts-node src/index.ts
 -   Configurable modules (on/off (Commands))
 -   Welcome images
 -   Quotes
+    -   addquote
+    -   quote
 -   YouTube
+    -   Youtuber role
 -   Twitch
+    -   Streamer role
+    -   Live role
 -   Music
 -   Reaction roles (WIP, Waiting for Discord to add Role selects)
