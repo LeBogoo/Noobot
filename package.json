@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "main": "src/index.ts",
     "scripts": {
-        "start": "ts-node src/index.ts",
+        "start": "ts-node index.ts",
+        "build": "tsc && tscp",
         "format": "prettier --write ."
     },
     "keywords": [],
@@ -28,6 +29,7 @@
         "@types/mongoose": "5.10.5",
         "@types/runes": "^0.4.1",
         "prettier": "^2.7.1",
-        "prettier-plugin-organize-imports": "^3.0.0"
+        "prettier-plugin-organize-imports": "^3.0.0",
+        "typescript-cp": "^0.1.6"
     }
 }
