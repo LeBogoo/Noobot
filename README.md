@@ -26,11 +26,11 @@ $ ts-node src/index.ts
 
 ## Todos
 
+-   Bday handler
 -   Ranklist
 -   Polls
 -   Configurable modules (on/off (Commands))
 -   Welcome images
--   Bdays
 -   Quotes
 -   YouTube
 -   Twitch
