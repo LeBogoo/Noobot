@@ -31,7 +31,7 @@ export default {
         const day = interaction.options.getInteger("day", true);
 
         const guildConfig = await loadConfig(interaction.guild!.id);
-        guildConfig.birthdays.birthdays.set(interaction.member!.user.id, [day, month + 1]);
+        guildConfig.birthdays.dates.set(interaction.member!.user.id, [day, month + 1]);
         guildConfig.save();
         return `Your birthday was set to ${days[day - 1]} of ${months[month]}`;
     },

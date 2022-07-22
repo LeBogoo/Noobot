@@ -13,7 +13,7 @@ async function checkGuild(client: Client, guildId: string) {
 
     const now = new Date();
 
-    Array.from(birthdays.birthdays).forEach(async ([userId, date]) => {
+    Array.from(birthdays.dates).forEach(async ([userId, date]) => {
         const member = await guild.members.fetch(userId);
         if (!member) return;
 
