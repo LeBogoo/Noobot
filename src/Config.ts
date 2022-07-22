@@ -62,9 +62,8 @@ const configSchema = new mongoose.Schema<Config>({
     },
 });
 
+const configModel = mongoose.model("Config", configSchema);
 export async function loadConfig(id: string): Promise<Config> {
-    const configModel = mongoose.model("Config", configSchema);
-
     let res = await configModel.findOne({ id });
     if (!res) {
         const newConfig = {
@@ -114,6 +113,11 @@ export async function loadConfig(id: string): Promise<Config> {
     }
 
     return res as Config;
+}
+
+export async function deleteConfig(id: string): Promise<mongoose.Document> {
+    const res = await configModel.deleteOne({ id });
+    return res;
 }
 
 export interface Config extends mongoose.Document {

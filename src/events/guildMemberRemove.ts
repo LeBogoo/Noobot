@@ -2,6 +2,7 @@ import { Client, GuildMember } from "discord.js";
 import { loadConfig } from "../Config";
 
 export default async function (client: Client, member: GuildMember) {
+    if (member.user.id == client.user!.id) return;
     const guild = member.guild;
     const guildConfig = await loadConfig(guild.id);
     const memberCount = guildConfig.memberCount;
