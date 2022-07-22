@@ -55,7 +55,7 @@ const configSchema = new mongoose.Schema<Config>({
     },
     birthdays: {
         enabled: Boolean,
-        birthdays: { type: Map, of: [Number] },
+        dates: { type: Map, of: [Number] },
         announcementChannel: String,
         role: String,
         active: [String],
@@ -104,7 +104,7 @@ export async function loadConfig(id: string): Promise<Config> {
             },
             birthdays: {
                 enabled: true,
-                birthdays: new Map<string, BirthDate>(),
+                dates: new Map<string, BirthDate>(),
                 announcementChannel: null,
                 role: null,
                 active: [],
@@ -167,7 +167,7 @@ export interface LevelsystemConfig extends AnnouncementConfig {
 }
 
 export interface BirthdayConfig extends AnnouncementConfig {
-    birthdays: Map<string, BirthDate>;
+    dates: Map<string, BirthDate>;
     role: string | null;
     active: string[];
 }
