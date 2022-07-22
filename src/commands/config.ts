@@ -151,8 +151,11 @@ async function levelsystemGroupHandler(interaction: CommandInteraction) {
                         unlinkSync(tempfilePath);
                         return interaction.editReply("Please upload an image file.");
                     }
+                    const { width, height } = data.size;
+                    if (width > height) {
+                    }
                     gm(tempfilePath)
-                        .resizeExact(720, 200)
+                        .resize(720, 200, "^")
 
                         .toBuffer("PNG", function (err: Error, buffer: Buffer) {
                             if (err)
