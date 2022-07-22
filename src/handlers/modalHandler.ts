@@ -7,7 +7,7 @@ export default async function (interaction: ModalSubmitInteraction) {
      * @todo Make it global commands!
      */
     const [triggerGroup, triggerFile, ...data] = interaction.customId.split("_");
-    if (existsSync(`./src/${triggerGroup}/${triggerFile}.ts`)) {
+    if (existsSync(`./${triggerGroup}/${triggerFile}.ts`)) {
         const command = (await import(`../${triggerGroup}/${triggerFile}.ts`)).default;
         if ("modalSubmit" in command) {
             command.modalSubmit(interaction);
