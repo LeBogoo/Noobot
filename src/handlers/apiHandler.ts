@@ -2,6 +2,8 @@ import { Client } from "discord.js";
 import express from "express";
 import mongoose from "mongoose";
 import { Feedback, feedbackSchema } from "../commands/feedback";
+import dotenv from "dotenv";
+dotenv.config();
 
 const priorityLookup = {
     3: "danger",
@@ -59,7 +61,7 @@ export default async function (client: Client) {
         res.json(mongooseResult);
     });
 
-    app.listen(8080, () => {
+    app.listen(parseInt(process.env.WEBSERVER_PORT || "8001"), () => {
         console.log("Api is ready!");
     });
 }

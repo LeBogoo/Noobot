@@ -83,7 +83,7 @@ export default async function (client: Client) {
     console.log(`${client.user?.username} is ready!`);
     cycleActiviy(client, 0);
     bdayHandler(client);
-    apiHandler(client);
+    if (process.env.ENABLE_WEBSERVER == "true") apiHandler(client);
 
     await mongoose.connect(
         // Look at .env_examle for a template!
