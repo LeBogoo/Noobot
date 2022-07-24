@@ -1,4 +1,5 @@
 import { Client, GuildMember } from "discord.js";
+import { logger } from "..";
 import { loadConfig } from "../Config";
 
 export default async function (client: Client, member: GuildMember) {
@@ -6,6 +7,10 @@ export default async function (client: Client, member: GuildMember) {
     const guildConfig = await loadConfig(guild.id);
     const memberCount = guildConfig.memberCount;
     const joinRole = guildConfig.joinRole;
+
+    logger.log(
+        `Member joined Guild ${guild.name}: ${member.user.username}#${member.user.discriminator} (${member.id})`
+    );
 
     if (joinRole.enabled) {
         const role = guild.roles.cache.find((guildRole) => guildRole.id == joinRole.roleId);

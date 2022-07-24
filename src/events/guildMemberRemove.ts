@@ -1,9 +1,13 @@
 import { Client, GuildMember } from "discord.js";
+import { logger } from "..";
 import { loadConfig } from "../Config";
 
 export default async function (client: Client, member: GuildMember) {
     if (member.user.id == client.user!.id) return;
     const guild = member.guild;
+
+    logger.log(`Member left Guild ${guild.name}: ${member.user.username}#${member.user.discriminator} (${member.id})`);
+
     const guildConfig = await loadConfig(guild.id);
     const memberCount = guildConfig.memberCount;
     if (memberCount.enabled) {
