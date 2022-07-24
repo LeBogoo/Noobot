@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%=botname%> - Config</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+            crossorigin="anonymous"
+        />
+        <style>
+            .configImage {
+                width: 10%;
+                margin: 1%;
+            }
+
+            .colorDisplay {
+                width: 20px;
+                height: 20px;
+                color: transparent;
+                user-select: none;
+                border-radius: 2px;
+            }
+        </style>
+    </head>
+    <body class="bg-dark text-light">
+        <div class="container mt-2 mb-2">
+            <h2 class="display-2 text-center"><%=botname%> - <%=config.name%></h2>
+            <a href="/config" class="btn btn-outline-primary" style="position: absolute; top: 20px; left: 20px">Back</a>
+
+            <div class="card text-bg-light mt-2">
+                <h5 class="card-header">ReactionMessages</h5>
+                <div class="card-body">
+                    <p class="card-text">Enabled: <%=config.reactionMessages.enabled%></p>
+                    <div class="list-group">
+                        <% for(var i=0; i<config.reactionMessages.messages; i++) {%>
+                            <li class="list-group-item"><%= config.reactionMessages.messages[i] %></li>
+                         <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card text-bg-light mt-2">
+                <h5 class="card-header">CustomCommands</h5>
+                <div class="card-body">
+                    <p class="card-text">Enabled: <%=config.customCommands.enabled%></p>
+                    <p class="card-text">Commands: 
+                        <div class="list-group">
+                            <% for(let [commandName,data] of config.customCommands.commands) {%>
+                                <li class="list-group-item">
+                                    <span>Name: <%= commandName %></span><br>
+                                    <span>Description: <%= data.commandJSON.description %></span><br>
+                                    <span>Response: <%= data.response %></span><br>
+                                </li>
+                            <% } %>
+                        </div>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card text-bg-light mt-2">
+                <h5 class="card-header">MemberCount</h5>
+                <div class="card-body">
+                    <p class="card-text">Enabled: <%=config.memberCount.enabled%></p>
+                    <p class="card-text">ChannelName: <%=config.memberCount.channelName%></p>
+
+                </div>
+            </div>
+
+            <div class="card text-bg-light mt-2">
+                <h5 class="card-header">JoinRole</h5>
+                <div class="card-body">
+                    <p class="card-text">Enabled: <%=config.joinRole.enabled%></p>
+                    <p class="card-text">RoleId: <%=config.joinRole.roleId || "Not set"%></p>
+                </div>
+            </div>
+
+            <div class="card text-bg-light mt-2">
+                <h5 class="card-header">Twitch</h5>
+                <div class="card-body">
+                    <p class="card-text">Enabled: <%=config.twitch.enabled%></p>
+                    <p class="card-text">AnnouncementChannelId: <%=config.twitch.announcementChannel || "Not set"%></p>
+                    <p class="card-text">Streamers: 
+                        <ul>
+                            <% for(let streamer of config.twitch.streamers) {%>
+                                    <li><%= streamer %></li>
+                            <% } %>
+                            </ul>
+                    </p>
+                    <p class="card-text">LiveMessages: 
+                        <ul>
+                            <% for(let message of config.twitch.liveMessages) {%>
+                                    <li><%= message %></li>
+                            <% } %>
+                            </ul>
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="card text-bg-light mt-2">
+                <h5 class="card-header">Levelsystem</h5>
+                <div class="card-body">
+                    <p class="card-text">Enabled: <%=config.levelsystem.enabled%></p>
+                    <p class="card-text">AnnouncementChannelId: <%=config.levelsystem.announcementChannel || "Not set"%></p>
+                    <p class="card-text">Multiplier: <%=config.levelsystem.multiplier || "Not set"%></p>
+                    <p class="card-text">DefaultOffset: <%=config.levelsystem.defaultOffset || "Not set"%></p>
+                    <p class="card-text">Color: <span class="colorDisplay" style="background-color: #<%-config.levelsystem.color%>;">----</span></p>
+                    <p class="card-text">LevelImage:
+                        <% if(config.levelsystem.levelImage){ %>
+                        <img
+                            class="img-fluid rounded-2 configImage"
+                            src="data:image/png;base64,<%-config.levelImage%>"
+                            alt="Level image"
+                        />
+                        <% } else{ %>
+                            Not set
+                        <% } %>
+
+                    </p>
+                    <p class="card-text">RanklistImage: 
+                        <% if(config.levelsystem.ranklistImage){ %>
+                        <img
+                            class="img-fluid rounded-2 configImage"
+                            src="data:image/png;base64,<%-config.ranklistImage%>"
+                            alt="Ranklist image"
+                        />
+                        <% } else{ %>
+                            Not set
+                        <% } %>
+                    </p>                  
+                </div>
+            </div>
+
+            <div class="card text-bg-light mt-2">
+                <h5 class="card-header">Birthdays</h5>
+                <div class="card-body">
+                    <p class="card-text">Enabled: <%=config.birthdays.enabled%></p>
+                    <p class="card-text">AnnouncementChannelId: <%=config.birthdays.announcementChannel%></p>
+                    <p class="card-text">BirthdayRoleId: <%=config.birthdays.role%></p>
+                </div>
+            </div>
+            
+        </div>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>

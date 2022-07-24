@@ -46,6 +46,7 @@ const configSchema = new mongoose.Schema<Config>({
         announcementChannel: String,
         color: String,
         levelImage: Buffer,
+        ranklistImage: Buffer,
         points: {
             type: Map,
             of: Number,
@@ -97,6 +98,7 @@ export async function loadConfig(id: string): Promise<Config> {
                 announcementChannel: null,
                 color: "ffffff",
                 levelImage: null,
+                ranklistImage: null,
                 points: new Map<string, number>(),
                 defaultOffset: 10,
                 multiplier: 50,
@@ -165,6 +167,7 @@ export interface ReactionMessageConfig extends ModuleConfig {
 export interface LevelsystemConfig extends AnnouncementConfig {
     color: string;
     levelImage: Buffer | null;
+    ranklistImage: Buffer | null;
     points: Map<string, number>;
     defaultOffset: number;
     multiplier: number;

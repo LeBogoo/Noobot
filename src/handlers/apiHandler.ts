@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import { Feedback, feedbackSchema } from "../commands/feedback";
 import dotenv from "dotenv";
+import { loadConfig } from "../Config";
 dotenv.config();
 
 const priorityLookup = {
@@ -19,6 +20,12 @@ export default async function (client: Client) {
     app.use(express.static("public"));
 
     app.get("/", async (req, res) => {
+        res.render("index", {
+            botname: client.user!.username,
+        });
+    });
+
+    app.get("/feedback", async (req, res) => {
         const mongooseResults: Feedback[] = (await feedbackModel.find({ pending: true })) as Feedback[];
 
         let feedbacks: {
@@ -44,9 +51,35 @@ export default async function (client: Client) {
 
         feedbacks = feedbacks.sort((a, b) => b.priority - a.priority);
 
-        res.render("index", {
+        res.render("feedback", {
             botname: client.user!.username,
             feedbacks,
+        });
+    });
+
+    app.get("/config", async (req, res) => {
+        const configs = client.guilds.cache.map((guild) => {
+            return { id: guild.id, name: guild.name };
+        });
+
+        res.render("configs", {
+            botname: client.user!.username,
+            configs,
+        });
+    });
+
+    app.get("/config/:id", async (req, res) => {
+        const guildConfig = await loadConfig(req.params.id);
+
+        const config = {
+            name: client.guilds.cache.find((guild) => guild.id == req.params.id)?.name,
+            ...guildConfig.toObject(),
+            levelImage: guildConfig.levelsystem.levelImage?.toString("base64"),
+            ranklistImage: guildConfig.levelsystem.ranklistImage?.toString("base64"),
+        };
+        res.render("config", {
+            botname: client.user!.username,
+            config,
         });
     });
 
