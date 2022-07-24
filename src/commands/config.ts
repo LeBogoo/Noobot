@@ -179,6 +179,46 @@ async function levelsystemGroupHandler(interaction: CommandInteraction) {
             break;
         }
 
+        case "ranklistimage": {
+            const ranklistImageAttachment = interaction.options.getAttachment("image");
+            if (ranklistImageAttachment) {
+                const tempfilePath = `./tempRanklistImageFile${interaction.guild!.id}`;
+                interaction.deferReply();
+                await downloadFile(ranklistImageAttachment.url, tempfilePath);
+
+                gm(tempfilePath).identify((err, data) => {
+                    if (err) {
+                        unlinkSync(tempfilePath);
+                        return interaction.editReply("Please upload an image file.");
+                    }
+                    const { width, height } = data.size;
+                    if (width > height) {
+                    }
+                    gm(tempfilePath)
+                        .resize(720, 1000, "^")
+
+                        .toBuffer("PNG", function (err: Error, buffer: Buffer) {
+                            if (err)
+                                return interaction.editReply(
+                                    `There was an error while processing your image.\n\`\`\`json\n${JSON.stringify(
+                                        err,
+                                        null,
+                                        2
+                                    )}\n\`\`\``
+                                );
+                            unlinkSync(tempfilePath);
+
+                            guildConfig.levelsystem.ranklistImage = buffer;
+                            guildConfig.save();
+
+                            interaction.editReply(`Saved image!`);
+                        });
+                });
+                break;
+            } else interaction.reply("Please attach an image.");
+            break;
+        }
+
         case "enable": {
             const enable = interaction.options.getBoolean("enable");
             guildConfig.levelsystem.enabled = enable === null ? true : enable;
@@ -228,6 +268,19 @@ export default {
                                 .setName("image")
                                 .setDescription(
                                     "Please select an image you want to use. Ideal resolution is 720x200px."
+                                )
+                                .setRequired(true)
+                        )
+                )
+                .addSubcommand((subcommand) =>
+                    subcommand
+                        .setName("ranklistimage")
+                        .setDescription("Sets the background image of ranklist messages")
+                        .addAttachmentOption((option) =>
+                            option
+                                .setName("image")
+                                .setDescription(
+                                    "Please select an image you want to use. Ideal resolution is 720x1000px."
                                 )
                                 .setRequired(true)
                         )
