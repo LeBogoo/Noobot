@@ -4,6 +4,7 @@ import { Client } from "discord.js";
 import dotenv from "dotenv";
 import { readdirSync } from "fs";
 import mongoose from "mongoose";
+import { logger } from "..";
 import { Config, loadConfig } from "../Config";
 import apiHandler from "../handlers/apiHandler";
 import bdayHandler from "../handlers/bdayHandler";
@@ -80,7 +81,7 @@ async function getCommands(guildConfig: Config) {
 }
 
 export default async function (client: Client) {
-    console.log(`${client.user?.username} is ready!`);
+    logger.log(`${client.user?.username} is ready!`);
     cycleActiviy(client, 0);
     bdayHandler(client);
     if (process.env.ENABLE_WEBSERVER == "true") apiHandler(client);
@@ -93,8 +94,8 @@ export default async function (client: Client) {
             useUnifiedTopology: true,
         },
         (error) => {
-            if (error) console.log(error.message);
-            else console.log("Connected to database!");
+            if (error) logger.log(error.message);
+            else logger.log("Connected to database!");
         }
     );
 

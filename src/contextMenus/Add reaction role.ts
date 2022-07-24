@@ -10,6 +10,7 @@ import {
     ModalSubmitInteraction,
     TextInputComponent,
 } from "discord.js";
+import { logger } from "..";
 import { Config } from "../Config";
 
 export default {
@@ -53,7 +54,7 @@ export default {
                 };
             });
 
-        console.log(roles);
+        logger.log(roles);
 
         const roleInput = new MessageSelectMenu()
             .setCustomId("roleInput")

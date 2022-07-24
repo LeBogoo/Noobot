@@ -1,5 +1,6 @@
 import { Client } from "discord.js";
+import { logger } from "..";
 
 export default async function (client: Client, error: Error) {
-    console.log(`ERROR: ${error.name} | ${error.message}`);
+    logger.log(`ERROR: ${error.name} | ${error.message}`);
 }

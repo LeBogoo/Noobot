@@ -1,8 +1,9 @@
 import { Client } from "discord.js";
+import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
+import { logger } from "..";
 import { Feedback, feedbackSchema } from "../commands/feedback";
-import dotenv from "dotenv";
 import { loadConfig } from "../Config";
 dotenv.config();
 
@@ -95,6 +96,6 @@ export default async function (client: Client) {
     });
 
     app.listen(parseInt(process.env.WEBSERVER_PORT || "8001"), () => {
-        console.log("Api is ready!");
+        logger.log("Api is ready!");
     });
 }

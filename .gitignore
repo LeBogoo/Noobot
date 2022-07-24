@@ -1,6 +1,5 @@
 node_modules
 .env
-data/
-
+logs/
 .ignore_*
 dist/
