@@ -11,7 +11,7 @@ export class Logger {
         this.logPath = `${this.logDir}/${this.logFile}`;
     }
 
-    getNewLogfileName(): string {
+    private getNewLogfileName(): string {
         let counter = 1;
         const now = new Date();
         let logFileName = `log_${now.getFullYear()}-${now.getMonth()}-${now.getDate()}.log`;
