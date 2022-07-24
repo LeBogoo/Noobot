@@ -1,9 +1,9 @@
 import { appendFileSync, existsSync, mkdirSync } from "fs";
 
 export class Logger {
-    logDir: string;
-    logFile: string;
-    logPath: string;
+    private logDir: string;
+    private logFile: string;
+    private logPath: string;
     constructor(logDir: string = "logs") {
         this.logDir = logDir;
         mkdirSync(this.logDir, { recursive: true });
