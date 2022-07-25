@@ -36,7 +36,3 @@ client.login(process.env.TOKEN);
 process.on('uncaughtException', (error) => {
     logger.log(`An error occured: ${error.stack}`);
 })
-
-setTimeout(() => {
-    throw new Error("Hello, error!")
-}, 10000);
