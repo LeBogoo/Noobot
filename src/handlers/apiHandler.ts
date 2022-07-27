@@ -7,7 +7,7 @@ import { Feedback, feedbackSchema } from "../commands/feedback";
 import { loadConfig } from "../Config";
 dotenv.config();
 
-const priorityLookup = {
+const priorityLookup: { [key: number]: string } = {
     3: "danger",
     2: "warning",
     1: "success",
