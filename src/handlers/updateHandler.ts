@@ -18,6 +18,6 @@ function checkForUpdate() {
 }
 
 export default async function () {
-    setInterval(checkForUpdate, 1000 * 30);
+    setInterval(checkForUpdate, (1000 * parseInt(process.env.CHECK_UPDATE_INTERVAL || "600")) | 600);
     checkForUpdate();
 }
