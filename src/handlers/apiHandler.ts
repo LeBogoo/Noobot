@@ -1,6 +1,6 @@
 import { Client } from "discord.js";
 import dotenv from "dotenv";
-import express from "express";
+import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import { logger } from "..";
 import { Feedback, feedbackSchema } from "../commands/feedback";
@@ -20,13 +20,13 @@ export default async function (client: Client) {
     app.set("view engine", "ejs");
     app.use(express.static("public"));
 
-    app.get("/", async (req, res) => {
+    app.get("/", async (req: Request, res: Response) => {
         res.render("index", {
             botname: client.user!.username,
         });
     });
 
-    app.get("/feedback", async (req, res) => {
+    app.get("/feedback", async (req: Request, res: Response) => {
         const mongooseResults: Feedback[] = (await feedbackModel.find({ pending: true })) as Feedback[];
 
         let feedbacks: {
@@ -58,7 +58,7 @@ export default async function (client: Client) {
         });
     });
 
-    app.get("/config", async (req, res) => {
+    app.get("/config", async (req: Request, res: Response) => {
         const configs = client.guilds.cache.map((guild) => {
             return { id: guild.id, name: guild.name };
         });
@@ -69,7 +69,7 @@ export default async function (client: Client) {
         });
     });
 
-    app.get("/config/:id", async (req, res) => {
+    app.get("/config/:id", async (req: Request, res: Response) => {
         const guildConfig = await loadConfig(req.params.id);
 
         const config = {
@@ -84,7 +84,7 @@ export default async function (client: Client) {
         });
     });
 
-    app.get("/feedback/close/:id", async (req, res) => {
+    app.get("/feedback/close/:id", async (req: Request, res: Response) => {
         const id = mongoose.Types.ObjectId(req.params.id);
 
         const mongooseResult: Feedback | null = (await feedbackModel.findOne({ _id: id })) as Feedback | null;
