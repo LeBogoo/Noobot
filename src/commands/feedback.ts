@@ -34,7 +34,7 @@ export const feedbackSchema = new mongoose.Schema<Feedback>({
 
 export const feedbackModel = mongoose.model("Feedback", feedbackSchema);
 
-const priorityMap = {
+const priorityMap: { [key: number]: string } = {
     1: "(1) Low",
     2: "(2) Medium",
     3: "(3) High",

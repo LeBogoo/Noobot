@@ -1,3 +1,5 @@
+import { NodeCanvasRenderingContext2D } from "canvas";
+
 export const PATHS = {
     COMMANDS: "./commands",
     CONTEXT_MENUS: "./contextMenus",
@@ -56,7 +58,7 @@ export const days = [
  * Draws a rounded rectangle using the current state of the canvas.
  * If you omit the last three params, it will draw a rectangle
  * outline with a 5 pixel border radius
- * @param {CanvasRenderingContext2D} ctx
+ * @param {NodeCanvasRenderingContext2D} ctx
  * @param {Number} x The top left x coordinate
  * @param {Number} y The top left y coordinate
  * @param {Number} width The width of the rectangle
@@ -65,7 +67,16 @@ export const days = [
  * @param {Boolean} [fill = false] Whether to fill the rectangle.
  * @param {Boolean} [stroke = true] Whether to stroke the rectangle.
  */
-export function roundRect(ctx, x, y, width, height, radius = 5, fill = false, stroke = true) {
+export function roundRect(
+    ctx: NodeCanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    radius: number = 5,
+    fill: boolean = false,
+    stroke: boolean = true
+) {
     ctx.beginPath();
     ctx.moveTo(x + radius, y);
     ctx.lineTo(x + width - radius, y);
