@@ -8,7 +8,6 @@ import { logger } from "..";
 import { Config, loadConfig } from "../Config";
 import apiHandler from "../handlers/apiHandler";
 import bdayHandler from "../handlers/bdayHandler";
-import updateHandler from "../handlers/updateHandler";
 import { PATHS } from "../helper";
 
 dotenv.config();
@@ -86,7 +85,6 @@ export default async function (client: Client) {
     cycleActiviy(client, 0);
     bdayHandler(client);
     if (process.env.ENABLE_WEBSERVER == "true") apiHandler(client);
-    if (process.env.ENABLE_AUTO_UPDATE == "true") updateHandler(client);
 
     await mongoose.connect(
         // Look at .env_examle for a template!

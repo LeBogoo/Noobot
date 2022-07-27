@@ -1,5 +1,4 @@
 import { execSync } from "child_process";
-import { Client } from "discord.js";
 import dotenv from "dotenv";
 import { logger } from "..";
 dotenv.config();
@@ -18,7 +17,7 @@ function checkForUpdate() {
     }
 }
 
-export default async function (client: Client) {
+export default async function () {
     setInterval(checkForUpdate, 1000 * 30);
     checkForUpdate();
 }

@@ -1,13 +1,13 @@
 import { Client, Intents } from "discord.js";
 import * as dotenv from "dotenv";
 import { readdirSync } from "fs";
+import updateHandler from "./handlers/updateHandler";
 import { Logger } from "./Logger";
 dotenv.config();
 
 export const logger = new Logger("../logs");
 
-
-
+if (process.env.ENABLE_AUTO_UPDATE == "true") updateHandler();
 
 const client = new Client({
     intents: [
@@ -33,6 +33,6 @@ readdirSync("./events").forEach(async (file) => {
 
 client.login(process.env.TOKEN);
 
-process.on('uncaughtException', (error) => {
+process.on("uncaughtException", (error) => {
     logger.log(`An error occured: ${error.stack}`);
-})
+});
