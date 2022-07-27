@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import { createWriteStream, unlinkSync } from "fs";
+import { ImageInfo } from "gm";
 import fetch from "node-fetch";
 import { Config, loadConfig } from "../Config";
 import { BotCommand } from "../handlers/commandHandler";
@@ -146,7 +147,7 @@ async function levelsystemGroupHandler(interaction: CommandInteraction) {
                 interaction.deferReply();
                 await downloadFile(levelImageAttachment.url, tempfilePath);
 
-                gm(tempfilePath).identify((err, data) => {
+                gm(tempfilePath).identify((err: Error, data: ImageInfo) => {
                     if (err) {
                         unlinkSync(tempfilePath);
                         return interaction.editReply("Please upload an image file.");
@@ -186,7 +187,7 @@ async function levelsystemGroupHandler(interaction: CommandInteraction) {
                 interaction.deferReply();
                 await downloadFile(ranklistImageAttachment.url, tempfilePath);
 
-                gm(tempfilePath).identify((err, data) => {
+                gm(tempfilePath).identify((err: Error, data: ImageInfo) => {
                     if (err) {
                         unlinkSync(tempfilePath);
                         return interaction.editReply("Please upload an image file.");
