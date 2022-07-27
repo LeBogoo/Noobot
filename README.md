@@ -26,6 +26,7 @@ $ ts-node src/index.ts
 
 ## Todos
 
+-   Auto updater
 -   Ranklist
 -   Polls
 -   Configurable modules (on/off (Commands))
