@@ -1,6 +1,5 @@
 ## Todo
 
--   Auto updater
 -   Ranklist
 -   Polls
 -   Configurable modules (on/off (Commands))
