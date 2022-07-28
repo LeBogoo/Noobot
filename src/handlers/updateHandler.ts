@@ -12,7 +12,7 @@ function checkForUpdate() {
         execSync("git pull");
         setTimeout(() => {
             logger.log("Restarting...");
-            process.exitCode = 0;
+            process.exit(0);
         }, 5000);
     }
 }
