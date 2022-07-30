@@ -1,19 +1,16 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v10";
 import { Client } from "discord.js";
 import dotenv from "dotenv";
-import { readdirSync } from "fs";
 import mongoose from "mongoose";
 import { logger } from "..";
-import { Config, loadConfig } from "../Config";
+import { loadConfig } from "../Config";
 import apiHandler from "../handlers/apiHandler";
 import bdayHandler from "../handlers/bdayHandler";
-import { PATHS } from "../helper";
+import { getCommands } from "../handlers/commandHandler";
 
 dotenv.config();
 
-const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v10");
+import { REST } from "@discordjs/rest";
+import { Routes } from "discord-api-types/v10";
 
 async function getUserCount(client: Client): Promise<number> {
     let users = new Set();
@@ -38,48 +35,6 @@ async function cycleActiviy(client: Client, index: number) {
     }, 10000);
 }
 
-async function getCommands(guildConfig: Config) {
-    const commands: RESTPostAPIApplicationCommandsJSONBody[] = [];
-
-    /**
-     * Add default commands
-     */
-    const defaultCommands = readdirSync(PATHS.COMMANDS);
-    for (let i = 0; i < defaultCommands.length; i++) {
-        const command = (await import(`../commands/${defaultCommands[i]}`)).default;
-
-        if (await command.check(guildConfig)) {
-            const commandName = defaultCommands[i].split(".")[0];
-            const builder = command.builder as SlashCommandBuilder;
-            builder.setName(commandName);
-            commands.push(builder.toJSON());
-        }
-    }
-
-    /**
-     * Add context menu commands
-     */
-    const contextMenus = readdirSync(PATHS.CONTEXT_MENUS);
-    for (let i = 0; i < contextMenus.length; i++) {
-        const command = (await import(`../contextMenus/${contextMenus[i]}`)).default;
-        if (await command.check(guildConfig)) {
-            const commandName = contextMenus[i].split(".")[0];
-            const builder = command.builder as SlashCommandBuilder;
-            builder.setName(commandName);
-            commands.push(builder.toJSON());
-        }
-    }
-
-    /**
-     * Add custom commands
-     */
-    if (guildConfig.customCommands.enabled) {
-        commands.push(...Array.from(guildConfig.customCommands.commands).map((e) => e[1].commandJSON));
-    }
-
-    return commands;
-}
-
 export default async function (client: Client) {
     logger.log(`${client.user?.username} is ready!`);
     cycleActiviy(client, 0);
@@ -102,7 +57,7 @@ export default async function (client: Client) {
     /**
      * Register all commands to each guild
      */
-    const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
+    const rest = new REST({ version: "9" }).setToken(process.env.TOKEN!);
     client.guilds.cache.forEach(async (guild) => {
         /**
          * Create default  configs if they don't exist.
@@ -126,7 +81,7 @@ export default async function (client: Client) {
         /**
          * Send all commands to guild
          */
-        rest.put(Routes.applicationGuildCommands(client.application?.id, guild.id), {
+        rest.put(Routes.applicationGuildCommands(client.application!.id, guild.id), {
             body: await getCommands(guildConfig),
         });
     });
