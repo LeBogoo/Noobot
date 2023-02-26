@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { createCanvas, loadImage } from "@napi-rs/canvas";
+import { createCanvas, GlobalFonts, loadImage } from "@napi-rs/canvas";
 import { CommandInteraction, Guild, MessageAttachment, MessageEmbed, User } from "discord.js";
 import runes from "runes";
 import { Config, LevelsystemConfig, loadConfig } from "../Config";
@@ -22,7 +22,7 @@ async function generateLevelImage(
         levelSystemConfig.levelImage ? levelSystemConfig.levelImage : "./assets/default/LevelBackdrop.png"
     );
 
-    // registerFont("./assets/RobotoCondensed-Light.ttf", { family: "RobotoCondensed-Light" });
+    GlobalFonts.registerFromPath("./assets/RobotoCondensed-Light.ttf", "RobotoCondensed-Light");
 
     // Background (masked)
     const padding = 3;
@@ -58,17 +58,17 @@ async function generateLevelImage(
     ctx.stroke();
 
     // Username (limited to 20 chars)
-    ctx.font = '52px "RobotoCondensed-Light, sans-serif"';
+    ctx.font = "52px RobotoCondensed-Light";
     let nameText = runes.substr(levelUser.username, 0, 12);
     ctx.fillText(nameText == levelUser.username ? nameText : `${nameText}...`, 188, 83);
 
     // Rank and Level
-    ctx.font = '40px "RobotoCondensed-Light"';
+    ctx.font = "40px RobotoCondensed-Light";
     ctx.fillText(`Rang: ${levelUser.rank}`, 557, 70);
     ctx.fillText(`Level: ${levelUser.level}\n`, 557, 115);
 
     // Progress text
-    ctx.font = '25px "RobotoCondensed-Light"';
+    ctx.font = "25px RobotoCondensed-Light";
     ctx.fillText(`${Math.max(0, levelUser.relativeXp)} / ${levelUser.relativeNextLevelXp} XP`, 360, 140);
 
     ctx.fillStyle = `#${levelSystemConfig.color}33`; // make this transparent

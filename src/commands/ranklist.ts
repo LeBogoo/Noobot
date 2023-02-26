@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { createCanvas, loadImage } from "@napi-rs/canvas";
+import { createCanvas, GlobalFonts, loadImage } from "@napi-rs/canvas";
 import { CommandInteraction, Guild, MessageAttachment, MessageEmbed, User } from "discord.js";
 import runes from "runes";
 import { Config, LevelsystemConfig, loadConfig } from "../Config";
@@ -22,7 +22,7 @@ async function generateRanklistImage(
         levelSystemConfig.ranklistImage ? levelSystemConfig.ranklistImage : "./assets/default/RanklistBackdrop.png"
     );
 
-    // registerFont("./assets/RobotoCondensed-Light.ttf", { family: "RobotoCondensed-Light" });
+    GlobalFonts.registerFromPath("./assets/RobotoCondensed-Light.ttf", "RobotoCondensed-Light");
 
     // Background (masked)
     const padding = 3;
