@@ -1,4 +1,4 @@
-import { Client, Role } from "discord.js";
+import { Client, GuildMember, Role } from "discord.js";
 import { loadConfig } from "../Config";
 
 async function checkGuild(client: Client, guildId: string) {
@@ -13,8 +13,16 @@ async function checkGuild(client: Client, guildId: string) {
 
     const now = new Date();
 
-    Array.from(birthdays.dates).forEach(async ([userId, date]) => {
-        const member = await guild.members.fetch(userId);
+    for (let [userId, date] of Array.from(birthdays.dates)) {
+        let member: GuildMember | null = null;
+
+        try {
+            member = await guild.members.fetch(userId);
+        } catch (e) {
+            birthdays.dates.delete(userId);
+            continue;
+        }
+
         if (!member) return;
 
         var role: Role | null = null;
@@ -30,7 +38,8 @@ async function checkGuild(client: Client, guildId: string) {
             if (role) member.roles.remove(role);
             birthdays.active = birthdays.active.filter((activeId) => activeId != userId);
         }
-    });
+    }
+
     guildConfig.birthdays = birthdays;
     guildConfig.save();
 }

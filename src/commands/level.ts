@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { createCanvas, loadImage, registerFont } from "canvas";
+import { createCanvas, loadImage } from "@napi-rs/canvas";
 import { CommandInteraction, Guild, MessageAttachment, MessageEmbed, User } from "discord.js";
 import runes from "runes";
 import { Config, LevelsystemConfig, loadConfig } from "../Config";
@@ -22,7 +22,7 @@ async function generateLevelImage(
         levelSystemConfig.levelImage ? levelSystemConfig.levelImage : "./assets/default/LevelBackdrop.png"
     );
 
-    registerFont("./assets/RobotoCondensed-Light.ttf", { family: "RobotoCondensed-Light" });
+    // registerFont("./assets/RobotoCondensed-Light.ttf", { family: "RobotoCondensed-Light" });
 
     // Background (masked)
     const padding = 3;
@@ -87,7 +87,7 @@ async function generateLevelImage(
         false
     );
 
-    return new MessageAttachment(canvas.toBuffer(), `${levelUser.username}-level.png`);
+    return new MessageAttachment(canvas.toBuffer("image/png"), `${levelUser.username}-level.png`);
 }
 
 function percentToBars(percent: number, width: number): string {

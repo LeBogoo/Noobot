@@ -14,7 +14,7 @@
     "dependencies": {
         "@discordjs/builders": "^0.15.0",
         "@discordjs/rest": "^0.4.1",
-        "canvas": "2.8.0",
+        "@napi-rs/canvas": "^0.1.36",
         "discord-api-types": "^0.36.1",
         "discord.js": "^13.8.1",
         "dotenv": "^16.0.1",

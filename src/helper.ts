@@ -1,4 +1,4 @@
-import { NodeCanvasRenderingContext2D } from "canvas";
+import { SKRSContext2D } from "@napi-rs/canvas";
 
 export const PATHS = {
     COMMANDS: "./commands",
@@ -68,7 +68,7 @@ export const days = [
  * @param {Boolean} [stroke = true] Whether to stroke the rectangle.
  */
 export function roundRect(
-    ctx: NodeCanvasRenderingContext2D,
+    ctx: SKRSContext2D,
     x: number,
     y: number,
     width: number,
